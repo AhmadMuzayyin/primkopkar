@@ -15,11 +15,6 @@ class UserRepositoryImplement extends Eloquent implements UserRepository
         $this->model = $model;
     }
 
-    public function findByEmail(string $email)
-    {
-        return $this->model->where('email', $email)->first();
-    }
-
     public function findById($id)
     {
         return $this->model->whereId($id)->first();
@@ -42,7 +37,7 @@ class UserRepositoryImplement extends Eloquent implements UserRepository
     public function updateData($request, $id)
     {
         try {
-            $this->model->whereId($id)->update($request->all());
+            $this->model->whereId($id)->update($request);
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }

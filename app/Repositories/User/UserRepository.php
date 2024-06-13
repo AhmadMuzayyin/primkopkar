@@ -6,8 +6,6 @@ use LaravelEasyRepository\Repository;
 
 interface UserRepository extends Repository
 {
-    public function findByEmail(string $email);
-
     public function findById($id);
 
     public function getAll();

@@ -40,22 +40,23 @@ class UserController extends Controller
         }
     }
 
-    public function edit(User $id)
+    public function edit(User $user)
     {
-        return view('users.edit', ['user' => $this->user->findById($id)]);
+        return view('users.edit', ['user' => $this->user->findById($user->id)]);
     }
 
-    public function update(Request $request, User $id)
+    public function update(UserRequest $request, User $user)
     {
+        $validate = $request->validated();
         try {
-            $this->user->updateData($request, $id);
+            $this->user->updateData($validate, $user->id);
             Toastr::success('User updated successfully');
 
             return redirect()->route('users.index');
         } catch (\Throwable $th) {
             Toastr::error('User failed to update');
 
-            return redirect()->route('users.edit', $id);
+            return redirect()->route('users.edit', $user);
         }
     }
 

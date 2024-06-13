@@ -25,7 +25,7 @@ class CategoryRepositoryImplement extends Eloquent implements CategoryRepository
     public function storeData($request)
     {
         try {
-            $this->model->create($request->all());
+            $this->model->create($request);
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
@@ -33,7 +33,7 @@ class CategoryRepositoryImplement extends Eloquent implements CategoryRepository
     public function updateData($request, $id)
     {
         try {
-            $this->model->whereId($id)->update($request->all());
+            $this->model->whereId($id)->update($request);
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }

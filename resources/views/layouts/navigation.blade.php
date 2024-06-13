@@ -61,7 +61,7 @@
             <div class="collapse" id="menuExpages">
                 <ul class="sub-menu">
                     <li class="menu-item">
-                        <a href="#" class="menu-link">
+                        <a href="{{ route('category.index') }}" class="menu-link">
                             <span class="menu-text">Kategori</span>
                         </a>
                     </li>

@@ -1,7 +1,10 @@
-<a href="{{ route('users.edit', $user->id) }}" class="btn btn-warning btn-sm">
+<button type="button" class="btn btn-primary btn-sm">
+    <i class="bx bx-show"></i>
+</button>
+<a href="{{ route('category.edit', $category->slug) }}" class="btn btn-warning btn-sm">
     <i class="bx bx-edit"></i>
 </a>
-@if ($user->role != App\Role::Admin->value)
+@if ($category->role != App\Role::Admin->value)
     <button type="button" class="btn btn-danger btn-sm" id="delete-{{ $loop->iteration }}">
         <i class="bx bx-trash"></i>
     </button>
@@ -20,7 +23,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: '{{ route('users.destroy', $user->id) }}',
+                            url: '{{ route('category.destroy', $category->id) }}',
                             type: 'DELETE',
                             data: {
                                 '_token': '{{ csrf_token() }}'
