@@ -94,6 +94,16 @@
     <script src="{{ url('assets/js/pages/datatables.js') }}"></script>
     <script src="{{ url('assets/libs/sweetalert2/sweetalert2.min.js') }}"></script>
     <!-- third party js ends -->
+    @if (flash()->message)
+        <script>
+            Swal.fire({
+                icon: '{{ flash()->class }}',
+                title: '{{ flash()->message }}',
+                showConfirmButton: false,
+                timer: 1500
+            });
+        </script>
+    @endif
     @stack('js')
 </body>
 

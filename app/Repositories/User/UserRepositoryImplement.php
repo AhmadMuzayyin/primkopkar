@@ -33,7 +33,7 @@ class UserRepositoryImplement extends Eloquent implements UserRepository
     public function storeData($request)
     {
         try {
-            $this->model->create($request->all());
+            $this->model->create($request);
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }

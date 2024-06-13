@@ -6,21 +6,16 @@ class Toastr
 {
     public static function success($message)
     {
-        return "<script>toastr.success('{$message}')</script>";
+        flash($message, 'success');
     }
 
     public static function error($message)
     {
-        return "<script>toastr.error('{$message}')</script>";
+        flash($message, 'error');
     }
 
     public static function warning($message)
     {
-        return "<script>toastr.warning('{$message}')</script>";
-    }
-
-    public static function info($message)
-    {
-        return "<script>toastr.info('{$message}')</script>";
+        flash($message, 'warning');
     }
 }
