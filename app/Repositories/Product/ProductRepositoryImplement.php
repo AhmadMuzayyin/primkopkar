@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Product;
 
+use App\Models\Category;
 use App\Models\Product;
 use Exception;
 use LaravelEasyRepository\Implementations\Eloquent;
@@ -27,6 +28,10 @@ class ProductRepositoryImplement extends Eloquent implements ProductRepository
     public function getAll()
     {
         return $this->model->all();
+    }
+    public function getCategory()
+    {
+        return Category::all();
     }
     public function storeData($request)
     {

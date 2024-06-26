@@ -66,17 +66,17 @@
                         </a>
                     </li>
                     <li class="menu-item">
-                        <a href="#" class="menu-link">
+                        <a href="{{ route('products.index') }}" class="menu-link">
                             <span class="menu-text">Data Barang</span>
                         </a>
                     </li>
                     <li class="menu-item">
-                        <a href="#" class="menu-link">
+                        <a href="{{ route('stocks.index') }}" class="menu-link">
                             <span class="menu-text">Stok Barang</span>
                         </a>
                     </li>
                     <li class="menu-item">
-                        <a href="#" class="menu-link">
+                        <a href="{{ route('product_transactions.index') }}" class="menu-link">
                             <span class="menu-text">Transaksi</span>
                         </a>
                     </li>

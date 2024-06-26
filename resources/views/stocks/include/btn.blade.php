@@ -1,3 +1,6 @@
+<button type="button" class="btn btn-primary btn-sm">
+    <i class="bx bx-show"></i>
+</button>
 <a href="{{ route('category.edit', $category->slug) }}" class="btn btn-warning btn-sm">
     <i class="bx bx-edit"></i>
 </a>
