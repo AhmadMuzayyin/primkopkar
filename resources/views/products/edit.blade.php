@@ -4,15 +4,15 @@
         <div class="col-sm col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <a href="{{ route('category.index') }}" class="btn btn-primary">
+                    <a href="{{ route('products.index') }}" class="btn btn-primary">
                         <i class="bx bx-left-arrow-circle"></i> Kembali
                     </a>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('category.update', $category->slug) }}" method="post">
+                    <form action="{{ route('products.update', $product->id) }}" method="post">
                         @csrf
                         @method('PUT')
-                        @include('categories.include.form')
+                        @include('products.include.form')
                         <div class="form-group mt-3">
                             <button type="submit" class="btn btn-primary">Perbarui</button>
                         </div>

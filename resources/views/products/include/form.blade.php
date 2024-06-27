@@ -8,10 +8,12 @@
 </x-t-select>
 <x-t-textarea id="description" name="description" label="Deskripsi" value="{{ $product->description ?? '' }}" />
 <x-t-input t="number" id="purchase_price" name="purchase_price" label="Harga Beli"
-    value="{{ $product->purchase_price ?? '' }}" />
-<x-t-input t="number" id="margin" name="margin" label="Margin" value="{{ $product->margin ?? '' }}" />
-<x-t-input t="number" id="stock" name="stock" label="Stok" value="{{ $product->stock ?? '' }}" />
-<x-t-input t="number" id="shu" name="shu" label="SHU" value="{{ $product->shu ?? '' }}" />
-<x-t-input t="number" id="price" name="price" label="Harga Tunai" value="{{ $product->price ?? '' }}" />
+    value="{{ $product->purchase_price ?? '' }}" min="1" />
+<x-t-input t="number" id="margin" name="margin" label="Margin" value="{{ $product->margin ?? '' }}"
+    min="1" />
+<x-t-input t="number" id="stock" name="stock" label="Stok" value="{{ $product->stock ?? '' }}" min="1" />
+<x-t-input t="number" id="shu" name="shu" label="SHU" value="{{ $product->shu ?? '' }}" min="1" />
+<x-t-input t="number" id="price" name="price" label="Harga Tunai" value="{{ $product->price ?? '' }}"
+    min="1" />
 <x-t-input t="number" id="price_credit" name="price_credit" label="Harga Kredit"
-    value="{{ $product->price_credit ?? '' }}" />
+    value="{{ $product->price_credit ?? '' }}" min="1" />

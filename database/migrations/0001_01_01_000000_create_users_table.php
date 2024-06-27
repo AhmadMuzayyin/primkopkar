@@ -1,5 +1,6 @@
 <?php
 
+use App\Role;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -18,6 +19,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
+            $table->enum('role', [Role::Admin->value, Role::Kasir->value, Role::Bendahara->value, Role::Jasa->value])->default(Role::Admin->value);
             $table->timestamps();
         });
 

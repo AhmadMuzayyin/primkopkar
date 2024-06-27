@@ -24,22 +24,18 @@ class StockRepositoryImplement extends Eloquent implements StockRepository
     {
         return $this->model->whereId($id)->first();
     }
+    public function findByProductId($product_id)
+    {
+        return $this->model->where('product_id', $product_id)->first();
+    }
     public function getAll()
     {
         return $this->model->all();
     }
-    public function storeData($request)
-    {
-        try {
-            $this->model->create($request->all());
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
-        }
-    }
     public function updateData($request, $id)
     {
         try {
-            $this->model->whereId($id)->update($request->all());
+            $this->model->whereId($id)->update($request);
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }

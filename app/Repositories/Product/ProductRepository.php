@@ -11,5 +11,6 @@ interface ProductRepository extends Repository
     public function getCategory();
     public function storeData($request);
     public function updateData($request, $id);
+    public function updateStock(int $stock, $id);
     public function deleteData($id);
 }

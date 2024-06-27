@@ -36,7 +36,7 @@ class ProductRepositoryImplement extends Eloquent implements ProductRepository
     public function storeData($request)
     {
         try {
-            $this->model->create($request->all());
+            return $this->model->create($request);
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
@@ -44,7 +44,17 @@ class ProductRepositoryImplement extends Eloquent implements ProductRepository
     public function updateData($request, $id)
     {
         try {
-            $this->model->whereId($id)->update($request->all());
+            $this->model->whereId($id)->update($request);
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+    public function updateStock($stock, $id)
+    {
+        try {
+            $this->model->whereId($id)->update([
+                'stock' => $stock
+            ]);
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }

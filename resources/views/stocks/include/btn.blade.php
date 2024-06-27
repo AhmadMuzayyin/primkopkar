@@ -1,10 +1,31 @@
-<button type="button" class="btn btn-primary btn-sm">
-    <i class="bx bx-show"></i>
-</button>
-<a href="{{ route('category.edit', $category->slug) }}" class="btn btn-warning btn-sm">
+<button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-{{ $loop->iteration }}">
     <i class="bx bx-edit"></i>
-</a>
-@if ($category->role != App\Role::Admin->value)
+</button>
+<x-t-modal id="modal-{{ $loop->iteration }}" title="Edit Stok Barang" lg="modal-sm">
+    <div class="modal-body">
+        <form action="{{ route('stocks.update', $stock->id) }}" method="post">
+            @csrf
+            @method('PUT')
+            <input type="hidden" name="product_id" value="{{ $stock->product_id }}">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="mb-3">
+                            <x-t-input t="text" id="product" name="product" label="product"
+                                value="{{ $stock->product->name }}" r="disabled" />
+                        </div>
+                        <div class="mb-3">
+                            <x-t-input t="number" id="stock" name="stock" label="stock"
+                                value="{{ $stock->stock }}" />
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Perbarui</button>
+            </div>
+        </form>
+    </div>
+</x-t-modal>
+@if (Auth::user()->role == App\Role::Admin->value || Auth::user()->role == App\Role::Kasir->value)
     <button type="button" class="btn btn-danger btn-sm" id="delete-{{ $loop->iteration }}">
         <i class="bx bx-trash"></i>
     </button>
@@ -23,7 +44,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: '{{ route('category.destroy', $category->id) }}',
+                            url: '{{ route('stocks.destroy', $stock->id) }}',
                             type: 'DELETE',
                             data: {
                                 '_token': '{{ csrf_token() }}'

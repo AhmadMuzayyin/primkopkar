@@ -7,7 +7,7 @@
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal">
                         <i class="bx bx-plus"></i> Tambah Barang
                     </button>
-                    <x-t-modal title="Tambah Barang">
+                    <x-t-modal title="Tambah Barang" lg="modal-lg">
                         <form action="{{ route('products.store') }}" method="post">
                             <div class="modal-body">
                                 @csrf
@@ -27,7 +27,9 @@
                             <tr>
                                 <th>Kategori</th>
                                 <th>Nama</th>
-                                <th>Deskripsi</th>
+                                <th>Harga Beli</th>
+                                <th>Harga Jual</th>
+                                <th>Harga Kredit</th>
                                 <th>Stok</th>
                                 <th>
                                     <i class="bx bx-cog"></i>
@@ -39,7 +41,9 @@
                                 <tr>
                                     <td>{{ $product->category->name }}</td>
                                     <td>{{ $product->name }}</td>
-                                    <td>{{ $product->description }}</td>
+                                    <td>Rp.{{ number_format($product->purchase_price) }}</td>
+                                    <td>Rp.{{ number_format($product->price) }}</td>
+                                    <td>Rp.{{ number_format($product->price_credit) }}</td>
                                     <td>{{ $product->stock }}</td>
                                     <td>
                                         @include('products.include.btn')
