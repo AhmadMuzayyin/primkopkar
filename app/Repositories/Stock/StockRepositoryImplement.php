@@ -40,6 +40,14 @@ class StockRepositoryImplement extends Eloquent implements StockRepository
             throw new Exception($e->getMessage());
         }
     }
+    public function storeData($request)
+    {
+        try {
+            return $this->model->create($request);
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
     public function deleteData($id)
     {
         try {
