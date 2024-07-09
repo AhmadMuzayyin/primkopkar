@@ -17,11 +17,9 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Member::class)->nullable()->cascadeOnDelete();
-            $table->string('code', 10)->unique();
+            $table->string('code')->unique();
             $table->date('transaction_date');
             $table->bigInteger('amount')->default(0);
-            $table->bigInteger('margin')->default(0);
-            $table->bigInteger('shu')->default(0);
             $table->enum('type', ['Cash', 'Credit']);
             $table->boolean('status')->default(false);
             $table->timestamps();

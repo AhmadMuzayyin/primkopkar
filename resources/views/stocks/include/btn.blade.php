@@ -1,5 +1,5 @@
-<button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-{{ $loop->iteration }}">
-    <i class="bx bx-edit"></i>
+<button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#modal-{{ $loop->iteration }}">
+    <i class="bx bx-plus"></i>
 </button>
 <x-t-modal id="modal-{{ $loop->iteration }}" title="Edit Stok Barang" lg="modal-sm">
     <div class="modal-body">
@@ -11,11 +11,15 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="mb-3">
-                            <x-t-input t="text" id="product" name="product" label="product"
+                            <x-t-input t="text" id="product" name="product" label="Produk"
                                 value="{{ $stock->product->name }}" r="disabled" />
                         </div>
                         <div class="mb-3">
-                            <x-t-input t="number" id="stock" name="stock" label="stock"
+                            <x-t-input t="text" id="last_stock" name="last_stock" label="Stok saat ini"
+                                value="{{ $stock->stock }}" r="disabled" />
+                        </div>
+                        <div class="mb-3">
+                            <x-t-input t="number" id="stock" name="stock" label="Tambahan Stok"
                                 value="{{ $stock->stock }}" min="1" />
                         </div>
                     </div>
@@ -25,7 +29,7 @@
         </form>
     </div>
 </x-t-modal>
-@if (Auth::user()->role == App\Role::Admin->value || Auth::user()->role == App\Role::Kasir->value)
+{{-- @if (Auth::user()->role == App\Role::Admin->value || Auth::user()->role == App\Role::Kasir->value)
     <button type="button" class="btn btn-danger btn-sm" id="delete-{{ $loop->iteration }}">
         <i class="bx bx-trash"></i>
     </button>
@@ -74,4 +78,4 @@
             });
         </script>
     @endpush
-@endif
+@endif --}}

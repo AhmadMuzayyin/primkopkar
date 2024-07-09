@@ -25,6 +25,10 @@ class ProductRepositoryImplement extends Eloquent implements ProductRepository
     {
         return $this->model->whereId($id)->first();
     }
+    public function findByBarcode($barcode)
+    {
+        return $this->model->where('barcode', $barcode)->first();
+    }
     public function getAll()
     {
         return $this->model->all();
@@ -49,12 +53,10 @@ class ProductRepositoryImplement extends Eloquent implements ProductRepository
             throw new Exception($e->getMessage());
         }
     }
-    public function updateStock($stock, $id)
+    public function updateStock($request, $id)
     {
         try {
-            $this->model->whereId($id)->update([
-                'stock' => $stock
-            ]);
+            $this->model->whereId($id)->update($request);
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }

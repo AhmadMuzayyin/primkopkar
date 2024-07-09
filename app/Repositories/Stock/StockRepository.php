@@ -11,5 +11,6 @@ interface StockRepository extends Repository
     public function getAll();
     public function storeData($request);
     public function updateData($request, $id);
+    public function updateStock($request, $id);
     public function deleteData($id);
 }

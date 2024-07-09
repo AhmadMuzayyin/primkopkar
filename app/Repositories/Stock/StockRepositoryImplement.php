@@ -32,6 +32,14 @@ class StockRepositoryImplement extends Eloquent implements StockRepository
     {
         return $this->model->all();
     }
+    public function storeData($request)
+    {
+        try {
+            return $this->model->create($request);
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
     public function updateData($request, $id)
     {
         try {
@@ -40,11 +48,11 @@ class StockRepositoryImplement extends Eloquent implements StockRepository
             throw new Exception($e->getMessage());
         }
     }
-    public function storeData($request)
+    public function updateStock($request, $id)
     {
         try {
-            return $this->model->create($request);
-        } catch (Exception $e) {
+            $this->model->where('product_id', $id)->update($request);
+        } catch (\Throwable $e) {
             throw new Exception($e->getMessage());
         }
     }

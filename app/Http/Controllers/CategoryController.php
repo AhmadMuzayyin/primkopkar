@@ -43,7 +43,7 @@ class CategoryController extends Controller
         try {
             $this->categories->updateData($validate, $categories);
             Toastr::success('Berhasil merubah data.');
-            return redirect()->back();
+            return to_route('category.index');
         } catch (\Throwable $th) {
             Toastr::error('Gagal merubah data.');
             return redirect()->back();

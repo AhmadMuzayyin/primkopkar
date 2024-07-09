@@ -30,12 +30,19 @@ class ProductController extends Controller
             $product = $this->products->storeData($validate);
             $stock = ['product_id' => $product->id, 'stock' => $validate['stock']];
             $this->stock->storeData($stock);
-            Toastr::success('Berhasil menyimpan produk.');
-            return redirect()->back();
+            // Toastr::success('Berhasil menyimpan produk.');
+            // return redirect()->back();
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Berhasil menyimpan produk'
+            ], 200);
         } catch (\Throwable $th) {
-            dd($th->getMessage());
-            Toastr::error('Gagal menyimpan produk');
-            return redirect()->back();
+            // Toastr::error('Gagal menyimpan produk');
+            // return redirect()->back();
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Gagal menyimpan produk'
+            ], 500);
         }
     }
     public function edit($products)
@@ -49,18 +56,25 @@ class ProductController extends Controller
         $validate = $request->validated();
         try {
             $this->products->updateData($validate, $products);
-
             // update stock
             $stockRequest = ['product_id' => $products, 'stock' => $validate['stock']];
             $product = $this->products->findById($products);
             $stock = $this->stock->findByProductId($product->id);
             $this->stock->updateData($stockRequest, $stock->id);
 
-            Toastr::success('Berhasil memperbarui produk.');
-            return to_route('products.index');
+            // Toastr::success('Berhasil memperbarui produk.');
+            // return to_route('products.index');
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Berhasil memperbarui produk'
+            ], 200);
         } catch (\Throwable $th) {
-            Toastr::error('Gagal memperbarui produk.');
-            return redirect()->back();
+            // Toastr::error('Gagal memperbarui produk.');
+            // return redirect()->back();
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Gagal memperbarui produk'
+            ], 500);
         }
     }
     public function destroy($products)

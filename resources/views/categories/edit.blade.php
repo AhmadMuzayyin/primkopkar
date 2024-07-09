@@ -9,7 +9,7 @@
                     </a>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('category.update', $category->slug) }}" method="post">
+                    <form action="{{ route('category.update', $category->id) }}" method="post">
                         @csrf
                         @method('PUT')
                         @include('categories.include.form')

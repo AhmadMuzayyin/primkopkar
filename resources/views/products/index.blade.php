@@ -8,7 +8,7 @@
                         <i class="bx bx-plus"></i> Tambah Barang
                     </button>
                     <x-t-modal title="Tambah Barang" lg="modal-lg">
-                        <form action="{{ route('products.store') }}" method="post">
+                        <form action="{{ route('products.store') }}" id="createForm" method="post">
                             <div class="modal-body">
                                 @csrf
                                 <div class="container">
@@ -16,7 +16,7 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button class="btn btn-primary mt-3" type="submit">Simpan</button>
+                                <button class="btn btn-primary mt-3" type="button" id="save">Simpan</button>
                             </div>
                         </form>
                     </x-t-modal>
@@ -25,7 +25,7 @@
                     <table class="table dt-responsive nowrap w-100" id="basic-datatable">
                         <thead>
                             <tr>
-                                <th>Kategori</th>
+                                <th>Barcode</th>
                                 <th>Nama</th>
                                 <th>Harga Beli</th>
                                 <th>Harga Jual</th>
@@ -39,7 +39,7 @@
                         <tbody>
                             @foreach ($products as $product)
                                 <tr>
-                                    <td>{{ $product->category->name }}</td>
+                                    <td>{{ $product->barcode }}</td>
                                     <td>{{ $product->name }}</td>
                                     <td>Rp.{{ number_format($product->purchase_price) }}</td>
                                     <td>Rp.{{ number_format($product->price) }}</td>

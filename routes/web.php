@@ -17,7 +17,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('category', CategoryController::class);
     Route::resource('products', ProductController::class);
     Route::resource('stocks', StockController::class);
-    Route::resource('product_transactions', ProductTransactionController::class);
+    Route::controller(ProductTransactionController::class)->as('product_transactions.')->group(function () {
+        Route::get('product_transactions', 'index')->name('index');
+        Route::get('product_transactions/find/{product:barcode}', 'find')->name('find');
+        Route::post('product_transactions/store/{product:barcode}', 'store')->name('store');
+        Route::post('product_transactions/bayar/{product_transaction}', 'bayar')->name('bayar');
+        Route::delete('product_transactions/delete/{product_transaction}/{product}', 'delete')->name('delete');
+        Route::delete('product_transactions/destroy/{product_transaction}', 'destroy')->name('destroy');
+    });
     Route::get('dashboard', DashboardController::class)->name('dashboard');
 });
 Route::middleware('auth')->group(function () {
