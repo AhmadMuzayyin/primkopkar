@@ -124,7 +124,6 @@ class ProductTransactionController extends Controller
                 $items = $this->itemTransaction->findById($product_transaction->id);
                 foreach ($items as $key => $value) {
                     $product = $this->product->findById($value->product_id);
-                    // dd($product->stock - $value->quantity);
                     $productRequest = [
                         'stock' => $product->stock - $value->quantity,
                     ];
@@ -136,7 +135,6 @@ class ProductTransactionController extends Controller
                 return redirect()->back();
             }
         } catch (\Throwable $th) {
-            dd($th->getMessage());
             Toastr::error('Gagal membayar transaksi');
             return redirect()->back();
         }
