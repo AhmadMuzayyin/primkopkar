@@ -1,4 +1,4 @@
-<button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#modal-{{ $loop->iteration }}">
+<button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal-{{ $loop->iteration }}">
     <i class="bx bx-plus"></i>
 </button>
 <x-t-modal id="modal-{{ $loop->iteration }}" title="Edit Stok Barang" lg="modal-sm">
