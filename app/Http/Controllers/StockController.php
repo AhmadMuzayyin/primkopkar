@@ -35,7 +35,6 @@ class StockController extends Controller
             Toastr::success('Berhasil memperbarui stok.');
             return redirect()->back();
         } catch (\Throwable $th) {
-            dd($th->getMessage());
             Toastr::error('Gagal memperbarui stok.');
             return redirect()->back();
         }
