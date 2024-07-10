@@ -27,11 +27,15 @@ class StockController extends Controller
     {
         $validate = $request->validated();
         try {
+            $last_stock = $this->stocks->findById($stocks);
+            $validate['stock'] = $last_stock->stock + $validate['stock'];
             $this->stocks->updateData($validate, $stocks);
-            $this->product->updateStock($validate['stock'], $validate['product_id']);
+            $req = ['stock' => $validate['stock']];
+            $this->product->updateStock($req, $validate['product_id']);
             Toastr::success('Berhasil memperbarui stok.');
             return redirect()->back();
         } catch (\Throwable $th) {
+            dd($th->getMessage());
             Toastr::error('Gagal memperbarui stok.');
             return redirect()->back();
         }
