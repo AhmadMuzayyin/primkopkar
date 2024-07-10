@@ -19,8 +19,7 @@
                                 value="{{ $stock->stock }}" r="disabled" />
                         </div>
                         <div class="mb-3">
-                            <x-t-input t="number" id="stock" name="stock" label="Tambahan Stok"
-                                value="{{ $stock->stock }}" min="1" />
+                            <x-t-input t="number" id="stock" name="stock" label="Tambahan Stok" min="1" />
                         </div>
                     </div>
                 </div>

@@ -64,9 +64,14 @@
                 if (number === '') return '';
                 return number.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
             }
+
+            function generateBarcode() {
+                return Math.floor(1000000000000 + Math.random() * 9000000000000);
+            }
             @if (request()->routeIs('products.index'))
                 $('#save').on('click', function() {
                     var barcode = $('#barcode').val();
+                    barcode = barcode == '' ? generateBarcode() : barcode;
                     var name = $('#name').val();
                     var category_id = $('#category_id').val();
                     var description = $('#description').val();
