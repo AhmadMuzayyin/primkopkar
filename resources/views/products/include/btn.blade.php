@@ -29,7 +29,7 @@
                 <tr>
                     <td>Margin</td>
                     <td>:</td>
-                    <td>{{ $product->margin }}%</td>
+                    <td>Rp. {{ number_format($product->margin) }}</td>
                 </tr>
                 <tr>
                     <td>Stok</td>
