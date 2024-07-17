@@ -39,7 +39,7 @@ class MemberRepositoryImplement extends Eloquent implements MemberRepository
     public function updateData($request, $id)
     {
         try {
-            $this->model->whereId($id)->update($request->all());
+            $this->model->whereId($id)->update($request);
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
