@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\Toastr;
 use App\Http\Requests\ProductRequest;
+use App\Models\Product;
 use App\Repositories\Product\ProductRepository;
 use App\Repositories\Stock\StockRepository;
 use Illuminate\Http\Request;
@@ -90,6 +91,25 @@ class ProductController extends Controller
                 'status' => 'error',
                 'message' => 'Gagal menghapus data'
             ], 500);
+        }
+    }
+    public function print(Request $request)
+    {
+        try {
+            $barcodes = $request->query('barcodes');
+            if ($barcodes) {
+                // Pisahkan barcodes menjadi array
+                $barcodeArray = explode(',', $barcodes);
+
+                // Ambil data produk berdasarkan barcode
+                $products = Product::whereIn('barcode', $barcodeArray)->get();
+                // Anda bisa mengembalikan view dengan data produk untuk mencetak barcode
+                return view('products.barcode', compact('products'));
+            } else {
+                return redirect()->back()->with('error', 'Tidak ada barcode yang dipilih');
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
         }
     }
 }

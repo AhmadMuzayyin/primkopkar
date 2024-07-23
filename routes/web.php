@@ -17,7 +17,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('members', MemberController::class);
     Route::resource('kategori_simpanan', KategoriSimpananController::class);
     Route::resource('category', CategoryController::class);
-    Route::resource('products', ProductController::class);
+    Route::resource('products', ProductController::class)->except('show');
+    Route::get('products/print', [ProductController::class, 'print'])->name('product.print');
     Route::resource('stocks', StockController::class);
     Route::controller(ProductTransactionController::class)->as('product_transactions.')->group(function () {
         Route::get('product_transactions', 'index')->name('index');
