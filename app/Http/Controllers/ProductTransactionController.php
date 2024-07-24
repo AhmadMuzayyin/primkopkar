@@ -13,6 +13,7 @@ use App\Repositories\ProductTransaction\ProductTransactionRepository;
 use App\Repositories\Stock\StockRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 
 class ProductTransactionController extends Controller
 {
@@ -104,41 +105,6 @@ class ProductTransactionController extends Controller
             return redirect()->back();
         }
     }
-    public function bayar(Request $request, ProductTransaction $product_transaction)
-    {
-        $request->validate([
-            'member_id' => 'exists:members,id',
-            'price' => 'required'
-        ]);
-        try {
-            if (str_replace('.', '', $request->price) < $product_transaction->amount) {
-                Toastr::error('Uang anda tidak cukup');
-                return redirect()->back();
-            } else {
-                $amount_price = str_replace('.', '', $request->price);
-                $transactionRequest = [
-                    'member_id' => $request->member_id,
-                    'status' => true,
-                    'amount_price' => $amount_price
-                ];
-                $items = $this->itemTransaction->findById($product_transaction->id);
-                foreach ($items as $key => $value) {
-                    $product = $this->product->findById($value->product_id);
-                    $productRequest = [
-                        'stock' => $product->stock - $value->quantity,
-                    ];
-                    $this->product->updateStock($productRequest, $value->product_id);
-                    $this->stok->updateStock($productRequest, $value->product_id);
-                }
-                $this->productTransaction->update($transactionRequest, $product_transaction->id);
-                Toastr::success('Berhasil membayar transaksi.');
-                return redirect()->back();
-            }
-        } catch (\Throwable $th) {
-            Toastr::error('Gagal membayar transaksi');
-            return redirect()->back();
-        }
-    }
     public function destroy(ProductTransaction $product_transaction)
     {
         try {
@@ -175,5 +141,53 @@ class ProductTransactionController extends Controller
                 'error' => $th->getMessage()
             ], 422);
         }
+    }
+    public function bayar(Request $request, ProductTransaction $product_transaction)
+    {
+        $request->validate([
+            // 'member_id' => 'exists:members,id',
+            'paymentMethod' => 'required',
+            'price' => 'required_if:paymentMethod,Cash|numeric',
+        ]);
+        // dd($request->all());
+        try {
+            if ($request->paymentMethod == 'Cash') {
+                if (str_replace('.', '', $request->price) < $product_transaction->amount) {
+                    Toastr::error('Uang anda tidak cukup');
+                    return redirect()->back();
+                } else {
+                    $amount_price = str_replace('.', '', $request->price);
+                    $transactionRequest = [
+                        'member_id' => $request->member_id,
+                        'status' => true,
+                        'amount_price' => $amount_price
+                    ];
+                    $items = $this->itemTransaction->findById($product_transaction->id);
+                    foreach ($items as $key => $value) {
+                        $product = $this->product->findById($value->product_id);
+                        $productRequest = [
+                            'stock' => $product->stock - $value->quantity,
+                        ];
+                        $this->product->updateStock($productRequest, $value->product_id);
+                        $this->stok->updateStock($productRequest, $value->product_id);
+                    }
+                    $this->productTransaction->update($transactionRequest, $product_transaction->id);
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => 'Berhasil menyimpan transaksi',
+                        'data' => $this->productTransaction->getById($product_transaction->id)
+                    ]);
+                }
+            }
+        } catch (\Throwable $th) {
+            Toastr::error('Gagal membayar transaksi');
+            return redirect()->back();
+        }
+    }
+    public function save(Request $request)
+    {
+        $product = $this->productTransaction->getById($request->product_transaction_id);
+        $items = $this->itemTransaction->findById($request->product_transaction_id);
+        return view('product_transactions.print', compact('product', 'items'));
     }
 }

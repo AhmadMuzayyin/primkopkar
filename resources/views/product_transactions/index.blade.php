@@ -97,13 +97,33 @@
                                         data-transactionid="{{ isset($transactions) && $transactions->count() > 0 ? $transactions[0]->id : '' }}">
                                         @csrf
                                         <x-t-select id="member_id" name="member_id" label="Member">
-                                            <option value="" selected disabled>Member</option>
+                                            <option value="">Member</option>
                                             @foreach ($members as $member)
                                                 <option value="{{ $member->id }}">{{ $member->name }}</option>
                                             @endforeach
                                         </x-t-select>
-                                        <x-t-input id="price" name="price" value="" label="Pembayaran"
-                                            t="text" min="1000" placeholder="Pembayaran" />
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="paymentMethod"
+                                                id="Cash" value="Cash">
+                                            <label class="form-check-label" for="Cash">
+                                                Cash
+                                            </label>
+                                        </div>
+                                        <div class="form-check mb-3">
+                                            <input class="form-check-input" type="radio" name="paymentMethod"
+                                                id="Credit" value="Credit">
+                                            <label class="form-check-label" for="Credit">
+                                                Credit
+                                            </label>
+                                        </div>
+                                        <x-t-input id="price" name="price" value="" label="" t="text"
+                                            min="1000" placeholder="Pembayaran" />
+                                        <button type="button" id="btnSimpan" class="btn btn-primary">
+                                            <i class='bx bx-save'></i> Simpan
+                                        </button>
+                                        <button type="button" id="btnPrintStruk" class="btn btn-danger">
+                                            <i class='bx bx-printer'></i> Cetak Struk
+                                        </button>
                                     </form>
                                 </div>
                             </x-t-modal>
@@ -178,7 +198,7 @@
                                         icon: 'success',
                                         title: res.message,
                                         showConfirmButton: false,
-                                        timer: 1500
+                                        timer: 1000
                                     });
                                     setTimeout(() => {
                                         window.location.reload();
@@ -189,7 +209,7 @@
                                         icon: 'error',
                                         title: err.message,
                                         showConfirmButton: false,
-                                        timer: 1500
+                                        timer: 1000
                                     });
                                 }
                             })
@@ -222,7 +242,7 @@
                                     icon: 'success',
                                     title: res.message,
                                     showConfirmButton: false,
-                                    timer: 1500
+                                    timer: 1000
                                 });
                                 setTimeout(() => {
                                     window.location.reload();
@@ -233,7 +253,7 @@
                                     icon: 'error',
                                     title: err.message,
                                     showConfirmButton: false,
-                                    timer: 1500
+                                    timer: 1000
                                 });
                             }
                         })
@@ -245,9 +265,25 @@
                 let total = $('#total').text();
                 var modal = $('#bayar');
                 modal.on('show.bs.modal', function(e) {
+                    setTimeout(() => {
+                        $('#member_id').focus();
+                    }, 500);
                     var input = $('#price');
+                    var label = input.prev();
+                    input.css('display', 'none');
+                    label.css('display', 'none');
+                    $('input[name="paymentMethod"]').change(function() {
+                        var selectedValue = $('input[name="paymentMethod"]:checked').val();
+                        if (selectedValue === 'Cash') {
+                            input.css('display', 'block');
+                            $('#change').text('Kembalian: Rp.');
+                        } else {
+                            input.css('display', 'none');
+                            $('#change').text('Kembalian: Rp. 0');
+                        }
+                    });
                     let typingTimer; // Timer identifier
-                    const doneTypingInterval = 1000;
+                    const doneTypingInterval = 300;
                     input.on('keyup', function() {
                         clearTimeout(typingTimer);
                         var input = $(this);
@@ -269,6 +305,76 @@
                     var form = $('#formbayar');
                     var transactionid = form.data('transactionid');
                     form.attr('action', '/product_transactions/bayar/' + transactionid);
+
+
+                    // print struk
+                    $('#btnPrintStruk').on('click', function() {
+                        var member_id = $('#member_id').val();
+                        var price = $('#price').val();
+                        var paymentMethod = $('input[name="paymentMethod"]:checked').val();
+                        var _token = "{{ csrf_token() }}";
+
+                        if (typeof paymentMethod === 'undefined') {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Pilih metode pembayaran',
+                                showConfirmButton: false,
+                                timer: 1000
+                            });
+                            return;
+                        }
+                        if (paymentMethod === 'Cash' && price === '') {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Pembayaran tidak boleh kosong',
+                                showConfirmButton: false,
+                                timer: 1000
+                            });
+                            return;
+                        }
+                        if (paymentMethod === 'Credit' && member_id === '') {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Member tidak boleh kosong',
+                                showConfirmButton: false,
+                                timer: 1000
+                            });
+                            return;
+                        }
+                        if (paymentMethod === 'Credit') {
+                            price = 0;
+                        }
+                        $.ajax({
+                            url: form.attr('action'),
+                            type: 'POST',
+                            data: {
+                                _token,
+                                member_id,
+                                price,
+                                paymentMethod
+                            },
+                            success: function(response) {
+                                var url =
+                                    "{{ route('product_transactions.save') }}?product_transaction_id=" +
+                                    response.data.id
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: response.message,
+                                    text: 'Struk proses dicetak',
+                                    showConfirmButton: false,
+                                    timer: 1000
+                                });
+                                setTimeout(() => {
+                                    modal.modal('hide');
+                                    modal.on('hidden.bs.modal', function() {
+                                        window.open(url, '_blank');
+                                        window.location.reload();
+                                    });
+                                }, 1500);
+                            },
+                        });
+                    });
+
                 })
             })
 

@@ -25,6 +25,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('product_transactions/find/{product:barcode}', 'find')->name('find');
         Route::post('product_transactions/store/{product:barcode}', 'store')->name('store');
         Route::post('product_transactions/bayar/{product_transaction}', 'bayar')->name('bayar');
+        Route::get('product_transactions/save/struk', 'save')->name('save');
         Route::delete('product_transactions/delete/{product_transaction}/{product}', 'delete')->name('delete');
         Route::delete('product_transactions/destroy/{product_transaction}', 'destroy')->name('destroy');
     });
