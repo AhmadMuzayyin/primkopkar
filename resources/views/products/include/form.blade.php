@@ -1,4 +1,6 @@
-<x-t-input t="text" id="barcode" name="barcode" label="Barcode" value="{{ $product->barcode ?? '' }}" />
+<x-t-input t="text" id="barcode" name="barcode" label="Barcode" value="{{ $product->barcode ?? '' }}">
+    <small class="text-danger">Biarkan kosong jika produk tidak mempunyai kode bar</small>
+</x-t-input>
 <x-t-input t="text" id="name" name="name" label="Nama Barang" value="{{ $product->name ?? '' }}" />
 <x-t-select id="category_id" name="category_id" label="Kategori Barang">
     <option value="" selected disabled>Kategori Barang</option>
@@ -64,14 +66,13 @@
                 if (number === '') return '';
                 return number.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
             }
-
-            function generateBarcode() {
-                return Math.floor(1000000000000 + Math.random() * 9000000000000);
-            }
             @if (request()->routeIs('products.index'))
+                function generate() {
+                    return Math.floor(1000000000000 + Math.random() * 9000000000000);
+                }
                 $('#save').on('click', function() {
                     var barcode = $('#barcode').val();
-                    barcode = barcode == '' ? generateBarcode() : barcode;
+                    barcode = barcode == '' ? generate() : barcode;
                     var name = $('#name').val();
                     var category_id = $('#category_id').val();
                     var description = $('#description').val();
@@ -122,9 +123,15 @@
                             }
                         },
                         error: function(xhr, status, error) {
+                            var err = JSON.parse(xhr.responseText);
+                            //get error message and push to variable
+                            var errMsg = '';
+                            $.each(err.errors, function(key, value) {
+                                errMsg += `<p class="text-danger">${value}</p>`;
+                            });
                             swal.fire({
                                 title: 'Gagal',
-                                text: 'Terjadi kesalahan saat menyimpan data',
+                                html: errMsg,
                                 icon: 'error',
                                 showConfirmButton: false,
                             });
@@ -132,8 +139,13 @@
                     })
                 })
             @elseif (request()->routeIs('products.edit'))
+
+                function generateBarcode() {
+                    return Math.floor(1000000000000 + Math.random() * 9000000000000);
+                }
                 $('#update').on('click', function() {
                     var barcode = $('#barcode').val();
+                    barcode = barcode == '' ? generateBarcode() : barcode;
                     var name = $('#name').val();
                     var category_id = $('#category_id').val();
                     var description = $('#description').val();

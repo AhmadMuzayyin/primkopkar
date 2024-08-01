@@ -31,7 +31,11 @@ class ProductRequest extends FormRequest
             'margin' => ['required', 'numeric', 'min:1'],
             'stock' => ['required', 'numeric', 'min:1'],
             'shu' => ['required', 'numeric', 'min:1'],
-            'price_credit' => ['required', 'numeric', 'min:1000'],
+            'price_credit' => ['required', 'numeric', 'min:1000', function ($attribute, $value, $fail) {
+                if ($value <= request()->price) {
+                    $fail('The ' . $attribute . ' must be greater than the price.');
+                }
+            }],
             'description' => ['nullable']
         ];
     }

@@ -4,6 +4,7 @@
     <input type="{{ $t }}" class="form-control @error($name ?? '') is-invalid @enderror"
         id="{{ $id ?? 'id' }}" name="{{ $name ?? 'name' }}" {{ $label ?? `placeholder="$label"` }}
         value="{{ $value ?? old($name ?? '') }}" required autocomplete="off" {{ $r ?? '' }} {!! $attributes !!}>
+    {{ $slot }}
     @error($name ?? '')
         <div class="invalid-tooltip">
             {{ $message }}
