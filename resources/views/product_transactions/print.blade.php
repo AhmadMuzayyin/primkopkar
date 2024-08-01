@@ -61,8 +61,20 @@
             <td>{{ number_format($total) }}</td>
         </tr>
         <tr>
+            <td>Bayar:</td>
+            <td>{{ number_format($product->amount_price) }}</td>
+        </tr>
+        <tr>
             <td>Kembali:</td>
-            <td>{{ number_format($product->amount_price - $product->amount) }}</td>
+            <td>
+                @php
+                    $kembali = 0;
+                    if ($product->amount_price > $product->amount) {
+                        $kembali = $product->amount_price - $product->amount;
+                    }
+                @endphp
+                {{ number_format($kembali) }}
+            </td>
         </tr>
     </table>
     <p style="text-align: center">Termikasih, barang yang sudah dibeli tidak dapat dikembalikan.</p>
