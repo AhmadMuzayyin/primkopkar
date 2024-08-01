@@ -22,7 +22,7 @@
         <p>No products found.</p>
     @endif
     <script src="{{ url('assets/js/vendor.min.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jquery-ean13@2.2.5/dist/jquery-ean13.min.js"></script>
+    <script src="{{ url('assets/js/jquery-ean13.min.js') }}"></script>
     <script>
         $(document).ready(function() {
             $('.barcode').each(function() {

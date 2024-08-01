@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('code')->unique();
             $table->date('transaction_date');
             $table->bigInteger('amount')->default(0);
+            $table->bigInteger('amount_price')->default(0);
             $table->enum('type', ['Cash', 'Credit']);
             $table->boolean('status')->default(false);
             $table->timestamps();
