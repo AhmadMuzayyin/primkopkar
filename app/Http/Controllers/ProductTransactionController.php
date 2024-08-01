@@ -145,12 +145,16 @@ class ProductTransactionController extends Controller
     public function bayar(Request $request, ProductTransaction $product_transaction)
     {
         $request->validate([
-            'paymentMethod' => 'required',
+            'paymentMethod' => 'required:in,Cash,Credit',
             'price' => 'required_if:paymentMethod,Cash|numeric',
-            'member_id' => 'required_if:paymentMethod,Credit|exists:members,id',
         ]);
         // dd($request->all());
         try {
+            if ($request->paymentMethod == 'Credit') {
+                $request->validate([
+                    'member_id' => 'required|exists:members,id'
+                ]);
+            }
             if ($request->paymentMethod == 'Cash') {
                 if (str_replace('.', '', $request->price) < $product_transaction->amount) {
                     return response()->json([
@@ -212,8 +216,11 @@ class ProductTransactionController extends Controller
                 ]);
             }
         } catch (\Throwable $th) {
-            Toastr::error('Gagal membayar transaksi');
-            return redirect()->back();
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Gagal menyimpan transaksi',
+                'error' => $th->getMessage()
+            ], 422);
         }
     }
     public function save(Request $request)
