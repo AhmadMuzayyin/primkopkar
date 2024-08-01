@@ -145,16 +145,18 @@ class ProductTransactionController extends Controller
     public function bayar(Request $request, ProductTransaction $product_transaction)
     {
         $request->validate([
-            // 'member_id' => 'exists:members,id',
             'paymentMethod' => 'required',
             'price' => 'required_if:paymentMethod,Cash|numeric',
+            'member_id' => 'required_if:paymentMethod,Credit|exists:members,id',
         ]);
         // dd($request->all());
         try {
             if ($request->paymentMethod == 'Cash') {
                 if (str_replace('.', '', $request->price) < $product_transaction->amount) {
-                    Toastr::error('Uang anda tidak cukup');
-                    return redirect()->back();
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'Uang yang dibayarkan kurang dari total harga'
+                    ], 422);
                 } else {
                     $amount_price = str_replace('.', '', $request->price);
                     $transactionRequest = [
@@ -178,6 +180,36 @@ class ProductTransactionController extends Controller
                         'data' => $this->productTransaction->getById($product_transaction->id)
                     ]);
                 }
+            } else {
+                $transactionRequest = [
+                    'member_id' => $request->member_id,
+                    'status' => true,
+                    'amount_price' => 0,
+                    'type' => 'Credit'
+                ];
+                $amount = 0;
+                $items = $this->itemTransaction->findById($product_transaction->id);
+                foreach ($items as $key => $value) {
+                    $product = $this->product->findById($value->product_id);
+                    // prepare data for update stock
+                    $productRequest = [
+                        'stock' => $product->stock - $value->quantity,
+                    ];
+                    $this->product->updateStock($productRequest, $value->product_id);
+                    $this->stok->updateStock($productRequest, $value->product_id);
+
+                    // prepare data for update transaction
+                    $amount += $product->price_credit * $value->quantity;
+                }
+                $transactionRequest['amount'] = $amount;
+                // prepare data for update transaction
+                $data = $this->productTransaction->update($transactionRequest, $product_transaction->id);
+                // dd($data);
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Berhasil menyimpan transaksi',
+                    'data' => $data
+                ]);
             }
         } catch (\Throwable $th) {
             Toastr::error('Gagal membayar transaksi');

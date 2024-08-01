@@ -23,7 +23,7 @@ class ProductTransactionRepositoryImplement extends Eloquent implements ProductT
 
     public function getById($id)
     {
-        return $this->model->find($id);
+        return $this->model->whereId($id)->first();
     }
     public function getAll()
     {

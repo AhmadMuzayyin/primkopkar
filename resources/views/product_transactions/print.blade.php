@@ -34,7 +34,12 @@
         @endphp
         @foreach ($items as $item)
             @php
-                $price = $item->price * $item->quantity;
+                $price = 0;
+                if ($product->type == 'Credit') {
+                    $price = $item->price + $item->shu * $item->quantity;
+                } else {
+                    $price = $item->price * $item->quantity;
+                }
                 $total += $price;
             @endphp
             <tr style="text-align: center">
@@ -50,7 +55,8 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td>{{ number_format($item->product->price) }}</td>
+                <td>{{ number_format($product->type == 'Credit' ? $item->product->price_credit : $item->product->price) }}
+                </td>
             </tr>
         @endforeach
     </table>
