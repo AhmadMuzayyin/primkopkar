@@ -18,12 +18,12 @@
                 <div class="collapse" id="kategori">
                     <ul class="sub-menu">
                         <li class="menu-item">
-                            <a href="#" class="menu-link">
+                            <a href="{{ route('saving_categories.index') }}" class="menu-link">
                                 <span class="menu-text">Simpanan</span>
                             </a>
                         </li>
                         <li class="menu-item">
-                            <a href="#" class="menu-link">
+                            <a href="{{ route('loan_categories.index') }}" class="menu-link">
                                 <span class="menu-text">Pinjaman</span>
                             </a>
                         </li>
@@ -64,11 +64,6 @@
                 <div class="collapse" id="menuExpages">
                     <ul class="sub-menu">
                         <li class="menu-item">
-                            <a href="{{ route('members.index') }}" class="menu-link">
-                                <span class="menu-text">Member</span>
-                            </a>
-                        </li>
-                        <li class="menu-item">
                             <a href="{{ route('category.index') }}" class="menu-link">
                                 <span class="menu-text">Kategori</span>
                             </a>
@@ -104,15 +99,21 @@
         {{-- laporan --}}
         @if (Auth::user()->role == App\Role::Admin->value)
             <li class="menu-item">
-                <a href="{{ route('dashboard') }}" class="menu-link waves-effect waves-light">
-                    <span class="menu-icon"><i class="bx bx-home-smile"></i></span>
-                    <span class="menu-text"> Laporan </span>
+                <a href="{{ route('members.index') }}" class="menu-link waves-effect waves-light">
+                    <span class="menu-icon"><i class='bx bxs-user-badge'></i></span>
+                    <span class="menu-text"> Member </span>
                 </a>
             </li>
             <li class="menu-item">
                 <a href="{{ route('users.index') }}" class="menu-link waves-effect waves-light">
                     <span class="menu-icon"><i class="bx bx-user"></i></span>
                     <span class="menu-text"> Pengguna </span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="{{ route('dashboard') }}" class="menu-link waves-effect waves-light">
+                    <span class="menu-icon"><i class='bx bx-line-chart'></i></span>
+                    <span class="menu-text"> Laporan </span>
                 </a>
             </li>
         @endif

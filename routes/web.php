@@ -3,13 +3,14 @@
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KategoriSimpananController;
+use App\Http\Controllers\LoanCategoryController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductTransactionController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SavingCategoryController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\UserController;
-use App\Models\Category;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -29,6 +30,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('product_transactions/delete/{product_transaction}/{product}', 'delete')->name('delete');
         Route::delete('product_transactions/destroy/{product_transaction}', 'destroy')->name('destroy');
     });
+    Route::resource('saving_categories', SavingCategoryController::class)->except('show');
+    Route::resource('loan_categories', LoanCategoryController::class)->except('show');
     Route::get('dashboard', DashboardController::class)->name('dashboard');
 });
 Route::middleware('auth')->group(function () {

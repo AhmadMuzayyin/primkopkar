@@ -6,7 +6,6 @@ use App\Helpers\Toastr;
 use App\Http\Requests\UserRequest;
 use App\Models\User;
 use App\Repositories\User\UserRepository;
-use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -33,9 +32,11 @@ class UserController extends Controller
         try {
             $this->user->storeData($validate);
             Toastr::success('User created successfully');
+
             return redirect()->route('users.index');
         } catch (\Throwable $th) {
             Toastr::error('User failed to create');
+
             return redirect()->route('users.index');
         }
     }
@@ -64,6 +65,7 @@ class UserController extends Controller
     {
         try {
             $this->user->delete($user->id);
+
             return response()->json(['message' => 'User deleted successfully'], 200);
         } catch (\Throwable $th) {
             return response()->json(['message' => 'User failed to delete'], 500);

@@ -2,7 +2,6 @@
 
 namespace App\Repositories\ProductTransaction;
 
-use App\Models\ProductItemTransaction;
 use App\Models\ProductTransaction;
 use LaravelEasyRepository\Implementations\Eloquent;
 
@@ -25,25 +24,32 @@ class ProductTransactionRepositoryImplement extends Eloquent implements ProductT
     {
         return $this->model->whereId($id)->first();
     }
+
     public function getAll()
     {
         return $this->model->where('status', false)->get();
     }
+
     public function getLatestTransaction()
     {
         return $this->model->where('status', false)->latest()->first();
     }
+
     public function store($request)
     {
         $productTransaction = $this->model->create($request);
+
         return $productTransaction;
     }
+
     public function update($request, $id)
     {
         $productTransaction = $this->model->find($id);
         $productTransaction->update($request);
+
         return $productTransaction;
     }
+
     public function deleteData($id)
     {
         return $this->model->find($id)->delete();

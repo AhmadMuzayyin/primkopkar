@@ -20,14 +20,17 @@ class MemberRepositoryImplement extends Eloquent implements MemberRepository
     {
         $this->model = $model;
     }
+
     public function findById($id)
     {
         return $this->model->whereId($id)->first();
     }
+
     public function getAll()
     {
         return $this->model->all();
     }
+
     public function storeData($request)
     {
         try {
@@ -36,6 +39,7 @@ class MemberRepositoryImplement extends Eloquent implements MemberRepository
             throw new Exception($e->getMessage());
         }
     }
+
     public function updateData($request, $id)
     {
         try {
@@ -44,6 +48,7 @@ class MemberRepositoryImplement extends Eloquent implements MemberRepository
             throw new Exception($e->getMessage());
         }
     }
+
     public function deleteData($id)
     {
         try {

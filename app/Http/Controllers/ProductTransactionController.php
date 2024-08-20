@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Helpers\Toastr;
 use App\Models\Member;
 use App\Models\Product;
-use App\Models\ProductItemTransaction;
 use App\Models\ProductTransaction;
 use App\Repositories\Product\ProductRepository;
 use App\Repositories\ProductItemTransaction\ProductItemTransactionRepository;
@@ -13,14 +12,17 @@ use App\Repositories\ProductTransaction\ProductTransactionRepository;
 use App\Repositories\Stock\StockRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\File;
 
 class ProductTransactionController extends Controller
 {
     protected $product;
+
     protected $productTransaction;
+
     protected $itemTransaction;
+
     protected $stok;
+
     public function __construct(ProductTransactionRepository $productTransaction, ProductItemTransactionRepository $itemTransaction, ProductRepository $product, StockRepository $stok)
     {
         $this->product = $product;
@@ -28,27 +30,32 @@ class ProductTransactionController extends Controller
         $this->itemTransaction = $itemTransaction;
         $this->stok = $stok;
     }
+
     public function index()
     {
         $transactions = $this->productTransaction->getAll();
         $members = Member::all();
+
         return view('product_transactions.index', compact('transactions', 'members'));
     }
+
     public function find(Product $product)
     {
         try {
             $product = $this->product->findByBarcode($product->barcode);
+
             return response()->json([
                 'status' => 'success',
-                'data' => $product
+                'data' => $product,
             ], 200);
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Gagal menemukan produk'
+                'message' => 'Gagal menemukan produk',
             ], 500);
         }
     }
+
     public function store(Request $request, Product $product)
     {
         $request->validate([
@@ -56,7 +63,7 @@ class ProductTransactionController extends Controller
         ]);
         try {
             $last = $this->productTransaction->getLatestTransaction();
-            if (!$last) {
+            if (! $last) {
                 $transactionRequest = [
                     'user_id' => Auth::user()->id,
                     'code' => fake()->unique()->randomNumber(6),
@@ -98,29 +105,34 @@ class ProductTransactionController extends Controller
                 }
             }
             Toastr::success('Berhasil menyimpan transaksi.');
+
             return redirect()->back();
         } catch (\Throwable $th) {
             dd($th->getMessage());
             Toastr::error('Gagal menyimpan transaksi');
+
             return redirect()->back();
         }
     }
+
     public function destroy(ProductTransaction $product_transaction)
     {
         try {
             $product_transaction->delete();
+
             return response()->json([
                 'status' => 'success',
-                'message' => 'Berhasil menghapus data'
+                'message' => 'Berhasil menghapus data',
             ], 200);
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Gagal menghapus data',
-                'error' => $th->getMessage()
+                'error' => $th->getMessage(),
             ], 422);
         }
     }
+
     public function delete(ProductTransaction $product_transaction, Product $product)
     {
         try {
@@ -130,18 +142,20 @@ class ProductTransactionController extends Controller
             } else {
                 $this->itemTransaction->deleteData($product_transaction->id, $product->id);
             }
+
             return response()->json([
                 'status' => 'success',
-                'message' => 'Berhasil menghapus produk dari transaksi'
+                'message' => 'Berhasil menghapus produk dari transaksi',
             ], 200);
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Gagal menghapus produk dari transaksi',
-                'error' => $th->getMessage()
+                'error' => $th->getMessage(),
             ], 422);
         }
     }
+
     public function bayar(Request $request, ProductTransaction $product_transaction)
     {
         $request->validate([
@@ -152,21 +166,21 @@ class ProductTransactionController extends Controller
         try {
             if ($request->paymentMethod == 'Credit') {
                 $request->validate([
-                    'member_id' => 'required|exists:members,id'
+                    'member_id' => 'required|exists:members,id',
                 ]);
             }
             if ($request->paymentMethod == 'Cash') {
                 if (str_replace('.', '', $request->price) < $product_transaction->amount) {
                     return response()->json([
                         'status' => 'error',
-                        'message' => 'Uang yang dibayarkan kurang dari total harga'
+                        'message' => 'Uang yang dibayarkan kurang dari total harga',
                     ], 422);
                 } else {
                     $amount_price = str_replace('.', '', $request->price);
                     $transactionRequest = [
                         'member_id' => $request->member_id,
                         'status' => true,
-                        'amount_price' => $amount_price
+                        'amount_price' => $amount_price,
                     ];
                     $items = $this->itemTransaction->findById($product_transaction->id);
                     foreach ($items as $key => $value) {
@@ -178,10 +192,11 @@ class ProductTransactionController extends Controller
                         $this->stok->updateStock($productRequest, $value->product_id);
                     }
                     $this->productTransaction->update($transactionRequest, $product_transaction->id);
+
                     return response()->json([
                         'status' => 'success',
                         'message' => 'Berhasil menyimpan transaksi',
-                        'data' => $this->productTransaction->getById($product_transaction->id)
+                        'data' => $this->productTransaction->getById($product_transaction->id),
                     ]);
                 }
             } else {
@@ -189,7 +204,7 @@ class ProductTransactionController extends Controller
                     'member_id' => $request->member_id,
                     'status' => true,
                     'amount_price' => 0,
-                    'type' => 'Credit'
+                    'type' => 'Credit',
                 ];
                 $amount = 0;
                 $items = $this->itemTransaction->findById($product_transaction->id);
@@ -208,25 +223,28 @@ class ProductTransactionController extends Controller
                 $transactionRequest['amount'] = $amount;
                 // prepare data for update transaction
                 $data = $this->productTransaction->update($transactionRequest, $product_transaction->id);
+
                 // dd($data);
                 return response()->json([
                     'status' => 'success',
                     'message' => 'Berhasil menyimpan transaksi',
-                    'data' => $data
+                    'data' => $data,
                 ]);
             }
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Gagal menyimpan transaksi',
-                'error' => $th->getMessage()
+                'error' => $th->getMessage(),
             ], 422);
         }
     }
+
     public function save(Request $request)
     {
         $product = $this->productTransaction->getById($request->product_transaction_id);
         $items = $this->itemTransaction->findById($request->product_transaction_id);
+
         return view('product_transactions.print', compact('product', 'items'));
     }
 }

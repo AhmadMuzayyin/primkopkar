@@ -14,14 +14,17 @@ class CategoryRepositoryImplement extends Eloquent implements CategoryRepository
     {
         $this->model = $model;
     }
+
     public function findBySlug(string $slug)
     {
         return $this->model->where('slug', $slug)->first();
     }
+
     public function getAll()
     {
         return $this->model->all();
     }
+
     public function storeData($request)
     {
         try {
@@ -30,6 +33,7 @@ class CategoryRepositoryImplement extends Eloquent implements CategoryRepository
             throw new Exception($e->getMessage());
         }
     }
+
     public function updateData($request, $id)
     {
         try {
@@ -38,6 +42,7 @@ class CategoryRepositoryImplement extends Eloquent implements CategoryRepository
             throw new Exception($e->getMessage());
         }
     }
+
     public function deleteData($id)
     {
         try {
