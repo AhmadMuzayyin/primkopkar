@@ -4,6 +4,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KategoriSimpananController;
 use App\Http\Controllers\LoanCategoryController;
+use App\Http\Controllers\LoanController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductTransactionController;
@@ -32,6 +33,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
     Route::resource('saving_categories', SavingCategoryController::class)->except('show');
     Route::resource('loan_categories', LoanCategoryController::class)->except('show');
+    Route::resource('loans', LoanController::class)->except('show');
     Route::get('dashboard', DashboardController::class)->name('dashboard');
 });
 Route::middleware('auth')->group(function () {
