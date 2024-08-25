@@ -7,8 +7,8 @@
                     <ul class="nav nav-tabs" role="tablist">
                         <li class="nav-item" role="presentation">
                             <a href="{{ url()->current() . '?tab=setoran' }}"
-                                class="nav-link {{ request()->get('tab') == 'setoran' ? 'active' : '' }}" role="tab"
-                                tabindex="-1">
+                                class="nav-link active {{ request()->get('tab') == 'setoran' ? 'active' : '' }}"
+                                role="tab" tabindex="-1">
                                 <span class="d-inline-block d-sm-none"><i class="mdi mdi-home-variant"></i></span>
                                 <span class="d-none d-sm-inline-block">Setoran</span>
                             </a>
@@ -24,8 +24,10 @@
                     <div class="tab-content">
                         @if (request()->get('tab') == 'setoran')
                             @include('savings.setoran')
-                        @else
+                        @elseif (request()->get('tab') == 'penarikan')
                             @include('savings.penarikan')
+                        @else
+                            @include('savings.setoran')
                         @endif
                     </div>
                 </div>
