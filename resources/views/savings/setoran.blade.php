@@ -17,7 +17,7 @@
             <tr>
                 <th>Nama</th>
                 <th>Kategori</th>
-                <th>Nominal</th>
+                <th>Saldo</th>
                 <th>
                     <i class="bx bx-cog"></i>
                 </th>
