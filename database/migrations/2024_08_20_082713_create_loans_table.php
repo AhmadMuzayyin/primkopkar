@@ -21,6 +21,7 @@ return new class extends Migration
             $table->bigInteger('loan_nominal');
             $table->bigInteger('interest_rate');
             $table->bigInteger('nominal_return');
+            $table->dateTime('loan_period');
             $table->enum('status', ['Lunas', 'Belum Lunas']);
             $table->timestamps();
         });

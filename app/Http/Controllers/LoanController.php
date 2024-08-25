@@ -41,6 +41,7 @@ class LoanController extends Controller
             $validated['nominal_return'] = $validated['loan_nominal'] + $interest_rate;
             $validated['loan_date'] = date('Y-m-d');
             $validated['loan_period'] = $currentDate->format('Y-m-d H:i:s');
+            $validated['status'] = 'Belum Lunas';
             $this->loanRepo->createLoans($validated);
             return redirect()->back()->with('success', 'Data pinjaman berhasil disimpan');
         } catch (\Throwable $th) {
