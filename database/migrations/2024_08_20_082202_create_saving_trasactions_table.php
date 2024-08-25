@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignIdFor(SavingCategory::class)->constrained()->cascadeOnDelete();
             $table->bigInteger('nominal');
             $table->date('saving_date');
-            $table->enum('status', ['Lunas', 'Belum']);
+            $table->enum('type', ['Setoran', 'Penarikan']);
             $table->timestamps();
         });
     }
