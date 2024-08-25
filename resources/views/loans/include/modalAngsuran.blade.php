@@ -57,14 +57,25 @@
                                 nominal: nominal
                             },
                             success: function(data) {
-                                swal.fire({
-                                    title: 'Berhasil',
-                                    text: data.message,
-                                    icon: 'success',
-                                    button: 'OK'
-                                }).then(function() {
-                                    window.location.reload();
-                                });
+                                if (data.status == 'success') {
+                                    swal.fire({
+                                        title: 'Berhasil',
+                                        text: data.message,
+                                        icon: 'success',
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    }).then(function() {
+                                        window.location.reload();
+                                    });
+                                }
+                                if (data.status == 'error') {
+                                    swal.fire({
+                                        text: data.message,
+                                        icon: 'error',
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    });
+                                }
                             }
                         });
                     });

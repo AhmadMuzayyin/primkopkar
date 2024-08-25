@@ -10,6 +10,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductTransactionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SavingCategoryController;
+use App\Http\Controllers\SavingController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -35,6 +36,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('loan_categories', LoanCategoryController::class)->except('show');
     Route::resource('loans', LoanController::class)->except('show');
     Route::post('loans/{loan}/payment', [LoanController::class, 'payment'])->name('loans.payment');
+    Route::controller(SavingController::class)->as('savings.')->group(function () {
+        Route::get('savings', 'index')->name('index');
+        Route::get('savings/{member}/show', 'show')->name('show');
+        Route::post('savings/store', 'store')->name('store');
+        Route::get('savings/{saving}/edit', 'edit')->name('edit');
+        Route::post('savings/update', 'update')->name('update');
+        Route::delete('savings/{saving}/destroy', 'destroy')->name('destroy');
+        Route::get('savings/history/{member}', 'history')->name('history');
+        Route::delete('savings/history/{saving}/destroy', 'historyDestroy')->name('history.destroy');
+    });
     Route::get('dashboard', DashboardController::class)->name('dashboard');
 });
 Route::middleware('auth')->group(function () {

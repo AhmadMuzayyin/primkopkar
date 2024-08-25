@@ -101,19 +101,18 @@ class LoanController extends Controller
             if ($secondPayment) {
                 $total_payment = $secondPayment->sum('nominal_installment');
                 if ($total_payment + $validated['nominal'] > $userLoan) {
-                    return response()->json(['status' => 'danger', 'message' => 'Pembayaran melebihi total pinjaman']);
+                    return response()->json(['status' => 'error', 'message' => 'Pembayaran melebihi total pinjaman']);
                 }
                 if ($total_payment + $validated['nominal'] == $userLoan) {
                     $this->loanRepo->updateLoans(['status' => 'Lunas'], $loan->id);
                     $loanPayments = $this->paymentRepo->createLoanPayments($data);
-                    return response()->json(['status' => 'success', 'message' => 'Pembayaran berhasil', 'data' => $loanPayments]);
+                    return response()->json(['status' => 'error', 'message' => 'Pembayaran berhasil', 'data' => $loanPayments]);
                 }
             }
             $loanPayments = $this->paymentRepo->createLoanPayments($data);
             return response()->json(['status' => 'success', 'message' => 'Pembayaran berhasil', 'data' => $loanPayments]);
         } catch (\Throwable $th) {
-            dd($th->getMessage());
-            return response()->json(['status' => 'danger', 'message' => 'Pembayaran gagal']);
+            return response()->json(['status' => 'error', 'message' => 'Pembayaran gagal']);
         }
     }
 }

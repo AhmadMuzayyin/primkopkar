@@ -40,7 +40,7 @@
                 <div class="collapse" id="menuComponentsui">
                     <ul class="sub-menu">
                         <li class="menu-item">
-                            <a href="#" class="menu-link">
+                            <a href="{{ route('savings.index') }}" class="menu-link">
                                 <span class="menu-text">Simpanan</span>
                             </a>
                         </li>

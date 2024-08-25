@@ -93,6 +93,7 @@
     <script src="{{ url('assets/libs/datatables.net-bs5/js/dataTables.bootstrap5.min.js') }}"></script>
     <script src="{{ url('assets/js/pages/datatables.js') }}"></script>
     <script src="{{ url('assets/libs/sweetalert2/sweetalert2.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.30.1/moment.min.js"></script>
     <!-- third party js ends -->
     @if (flash()->message)
         <script>

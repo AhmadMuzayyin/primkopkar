@@ -4,8 +4,8 @@
         <label for="{{ $id ?? 'id' }}" class="form-label">{{ $label ?? '' }}</label>
     @endif
     <input type="{{ $t }}" class="form-control @error($name ?? '') is-invalid @enderror"
-        id="{{ $id ?? 'id' }}" name="{{ $name ?? 'name' }}" {{ $label ?? `placeholder="$label"` }}
-        value="{{ $value ?? old($name ?? '') }}" required autocomplete="off" {{ $r ?? '' }} {!! $attributes !!}>
+        id="{{ $id ?? 'id' }}" name="{{ $name ?? 'name' }}" value="{{ $value ?? old($name ?? '') }}" required
+        autocomplete="off" {{ $r ?? '' }} {!! $attributes !!}>
     {{ $slot }}
     @error($name ?? '')
         <div class="invalid-tooltip">
