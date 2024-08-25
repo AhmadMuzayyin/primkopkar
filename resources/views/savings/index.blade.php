@@ -7,7 +7,7 @@
                     <ul class="nav nav-tabs" role="tablist">
                         <li class="nav-item" role="presentation">
                             <a href="{{ url()->current() . '?tab=setoran' }}"
-                                class="nav-link active {{ request()->get('tab') == 'setoran' ? 'active' : '' }}"
+                                class="nav-link {{ request()->get('tab') == 'setoran' || request()->get('tab') == null ? 'active' : '' }}"
                                 role="tab" tabindex="-1">
                                 <span class="d-inline-block d-sm-none"><i class="mdi mdi-home-variant"></i></span>
                                 <span class="d-none d-sm-inline-block">Setoran</span>
