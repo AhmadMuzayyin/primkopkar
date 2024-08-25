@@ -18,8 +18,8 @@ return new class extends Migration
             $table->foreignIdFor(Member::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(SavingCategory::class)->constrained()->cascadeOnDelete();
             $table->bigInteger('nominal');
+            $table->enum('transaction_type', ['Setoran', 'Penarikan']);
             $table->date('saving_date');
-            $table->enum('type', ['Setoran', 'Penarikan']);
             $table->timestamps();
         });
     }
