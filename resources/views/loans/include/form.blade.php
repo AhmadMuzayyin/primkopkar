@@ -14,5 +14,15 @@
             {{ $loan_category->name }}</option>
     @endforeach
 </x-t-select>
-<x-t-input id="loan_nominal" name="loan_nominal" label="Jumlah Pinjaman" t="number" min="1"
+<x-t-input id="loan_nominal" name="loan_nominal" label="Jumlah Pinjaman" t="text"
     value="{{ $loan->loan_nominal ?? old('loan_nominal') }}" />
+@isset($loan)
+    @php
+        $start = new \DateTime($loan->created_at);
+        $end = new \DateTime($loan->loan_date);
+        $interval = $start->diff($end);
+    @endphp
+    {{-- {{ $start->diff($end) }} --}}
+@endisset
+<x-t-input id="loan_period" name="loan_period" label="Jangka Waktu" t="number" min="1"
+    value="{{ $interval->m ?? old('loan_period') }}" />

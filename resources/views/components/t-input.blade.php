@@ -1,6 +1,8 @@
-@props(['id', 'name', 'value', 'label', 't', 'r'])
+@props(['id', 'name', 'value', 'label' => null, 't', 'r'])
 <div class="position-relative mb-3">
-    <label for="{{ $id ?? 'id' }}" class="form-label">{{ $label ?? '' }}</label>
+    @if (isset($label))
+        <label for="{{ $id ?? 'id' }}" class="form-label">{{ $label ?? '' }}</label>
+    @endif
     <input type="{{ $t }}" class="form-control @error($name ?? '') is-invalid @enderror"
         id="{{ $id ?? 'id' }}" name="{{ $name ?? 'name' }}" {{ $label ?? `placeholder="$label"` }}
         value="{{ $value ?? old($name ?? '') }}" required autocomplete="off" {{ $r ?? '' }} {!! $attributes !!}>

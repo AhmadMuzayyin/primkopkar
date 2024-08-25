@@ -34,6 +34,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('saving_categories', SavingCategoryController::class)->except('show');
     Route::resource('loan_categories', LoanCategoryController::class)->except('show');
     Route::resource('loans', LoanController::class)->except('show');
+    Route::post('loans/{loan}/payment', [LoanController::class, 'payment'])->name('loans.payment');
     Route::get('dashboard', DashboardController::class)->name('dashboard');
 });
 Route::middleware('auth')->group(function () {

@@ -5,13 +5,14 @@ namespace App\Repositories\LoanPayment;
 use LaravelEasyRepository\Implementations\Eloquent;
 use App\Models\LoanPayment;
 
-class LoanPaymentRepositoryImplement extends Eloquent implements LoanPaymentRepository{
+class LoanPaymentRepositoryImplement extends Eloquent implements LoanPaymentRepository
+{
 
     /**
-    * Model class to be used in this repository for the common methods inside Eloquent
-    * Don't remove or change $this->model variable name
-    * @property Model|mixed $model;
-    */
+     * Model class to be used in this repository for the common methods inside Eloquent
+     * Don't remove or change $this->model variable name
+     * @property Model|mixed $model;
+     */
     protected $model;
 
     public function __construct(LoanPayment $model)
@@ -19,5 +20,12 @@ class LoanPaymentRepositoryImplement extends Eloquent implements LoanPaymentRepo
         $this->model = $model;
     }
 
-    // Write something awesome :)
+    public function getLoanPayments()
+    {
+        return $this->model->all();
+    }
+    public function createLoanPayments($data)
+    {
+        return $this->model->create($data);
+    }
 }

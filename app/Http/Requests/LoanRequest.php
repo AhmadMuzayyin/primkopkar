@@ -25,6 +25,7 @@ class LoanRequest extends FormRequest
             'member_id' => ['required', 'exists:members,id'],
             'loan_category_id' => ['required', 'exists:loan_categories,id'],
             'loan_nominal' => ['required', 'numeric'],
+            'loan_period' => ['required', 'numeric'],
         ];
     }
 }
