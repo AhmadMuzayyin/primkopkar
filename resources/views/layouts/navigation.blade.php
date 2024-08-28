@@ -7,7 +7,7 @@
                 <span class="menu-text"> Dashboards </span>
             </a>
         </li>
-        @if (Auth::user()->role == App\Role::Admin->value)
+        @if (Auth::user()->role == App\Role::Admin->value || Auth::user()->role == App\Role::Bendahara->value)
             {{-- kategori --}}
             <li class="menu-item">
                 <a href="#kategori" data-bs-toggle="collapse" class="menu-link waves-effect waves-light">
@@ -90,7 +90,7 @@
         {{-- jasa --}}
         @if (Auth::user()->role == App\Role::Admin->value || Auth::user()->role == App\Role::Jasa->value)
             <li class="menu-item">
-                <a href="{{ route('dashboard') }}" class="menu-link waves-effect waves-light">
+                <a href="{{ route('jasa.index') }}" class="menu-link waves-effect waves-light">
                     <span class="menu-icon"><i class="bx bx-home-smile"></i></span>
                     <span class="menu-text"> Transaksi Jasa </span>
                 </a>
@@ -110,12 +110,12 @@
                     <span class="menu-text"> Pengguna </span>
                 </a>
             </li>
-            <li class="menu-item">
-                <a href="{{ route('dashboard') }}" class="menu-link waves-effect waves-light">
-                    <span class="menu-icon"><i class='bx bx-line-chart'></i></span>
-                    <span class="menu-text"> Laporan </span>
-                </a>
-            </li>
         @endif
+        <li class="menu-item">
+            <a href="{{ route('laporan.index') }}" class="menu-link waves-effect waves-light">
+                <span class="menu-icon"><i class='bx bx-line-chart'></i></span>
+                <span class="menu-text"> Laporan </span>
+            </a>
+        </li>
     </ul>
 </div>

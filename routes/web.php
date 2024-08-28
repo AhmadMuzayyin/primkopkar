@@ -3,6 +3,7 @@
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KategoriSimpananController;
+use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\LoanCategoryController;
 use App\Http\Controllers\LoanController;
 use App\Http\Controllers\MemberController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SavingCategoryController;
 use App\Http\Controllers\SavingController;
 use App\Http\Controllers\StockController;
+use App\Http\Controllers\TransaksiJasaController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -45,6 +47,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('savings/{saving}/destroy', 'destroy')->name('destroy');
         Route::get('savings/history/{member}', 'history')->name('history');
         Route::delete('savings/history/{saving}/destroy', 'historyDestroy')->name('history.destroy');
+    });
+    Route::controller(TransaksiJasaController::class)->as('jasa.')->group(function () {
+        Route::get('jasa', 'index')->name('index');
+    });
+    Route::controller(LaporanController::class)->as('laporan.')->group(function () {
+        Route::get('laporan', 'index')->name('index');
+        Route::get('laporan/toko/piutang_member', 'piutangMember')->name('piutang_member');
+        Route::post('laporan/toko/piutang_member/update', 'updatePiutangMember')->name('piutang_member.update');
+        Route::get('laporan/toko/perbarang', 'perBarang')->name('perbarang');
     });
     Route::get('dashboard', DashboardController::class)->name('dashboard');
 });

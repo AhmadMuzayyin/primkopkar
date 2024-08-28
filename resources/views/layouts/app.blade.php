@@ -87,7 +87,6 @@
     <script src="{{ url('assets/libs/jquery-sparkline/jquery.sparkline.min.js') }}"></script>
     <script src="{{ url('assets/libs/morris.js/morris.min.js') }}"></script>
     <script src="{{ url('assets/libs/raphael/raphael.min.js') }}"></script>
-    <script src="{{ url('assets/js/pages/dashboard.js') }}"></script>
     <!-- third party js -->
     <script src="{{ url('assets/libs/datatables.net/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ url('assets/libs/datatables.net-bs5/js/dataTables.bootstrap5.min.js') }}"></script>

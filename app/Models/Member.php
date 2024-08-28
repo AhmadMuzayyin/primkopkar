@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Member extends Model
 {
     use HasFactory;
-
     protected $guarded = ['id'];
+    public function product_transaction()
+    {
+        return $this->hasMany(ProductTransaction::class);
+    }
 }
