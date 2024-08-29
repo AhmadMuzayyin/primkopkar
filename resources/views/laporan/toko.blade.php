@@ -1,4 +1,17 @@
 <h4 class="fw-bold fs-2 text-white text-uppercase my-3 bg-danger text-center">Laporan Penjualan Perbarang</h4>
+<div class="row">
+    <div class="col">
+        <x-t-input id="from" name="from" t="date" r="" />
+    </div>
+    <div class="col">
+        <x-t-input id="to" name="to" t="date" r="" />
+    </div>
+    <div class="col">
+        <button class="btn btn-primary" id="filter">
+            <i class="bx bx-filter"></i>
+        </button>
+    </div>
+</div>
 <table class="table table-responsive table-striped" id="perBarang">
     <thead>
         <tr>
@@ -54,11 +67,21 @@
                 render: $.fn.dataTable.render.number(',', '.', 0, 'Rp. ')
             },
         ];
-        $('#perBarang').DataTable({
+        var table = $('#perBarang').DataTable({
             processing: true,
             serverSide: true,
-            ajax: '{{ route('laporan.perbarang') }}',
+            ajax: {
+                url: '{{ route('laporan.perbarang') }}',
+                data: function(d) {
+                    d.from = $('#from').val();
+                    d.to = $('#to').val();
+                }
+            },
             columns: columns
+        });
+
+        $('#filter').on('click', function() {
+            table.ajax.reload(); // Memuat ulang data di DataTable dengan parameter filter
         });
     </script>
 @endpush

@@ -68,6 +68,8 @@ class LaporanController extends Controller
     public function perBarang()
     {
         if (request()->ajax()) {
+            $from = request()->from;
+            $to = request()->to;
             $products = Product::select(
                 'products.id',
                 'products.name',
@@ -80,13 +82,16 @@ class LaporanController extends Controller
             )
                 ->join('product_item_transactions', 'products.id', '=', 'product_item_transactions.product_id')
                 ->join('product_transactions', 'product_item_transactions.product_transaction_id', '=', 'product_transactions.id')
+                ->when($from && $to, function ($query) use ($from, $to) {
+                    return $query->whereBetween(DB::raw('DATE(product_transactions.created_at)'), [$from, $to]);
+                })
                 ->groupBy(
                     'products.id',
                     'products.name',
                     'products.price',
                     'products.purchase_price',
                     'products.price_credit',
-                    'products.stock',
+                    'products.stock'
                 )
                 ->get();
             return DataTables::of($products)
