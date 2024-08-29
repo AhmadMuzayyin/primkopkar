@@ -5,7 +5,7 @@
         foreach ($loan->loan_payment as $payment) {
             $angsuran_dibayar += $payment->nominal_installment;
         }
-        $sisa_angsuran = $loan->loan_nominal - $angsuran_dibayar;
+        $sisa_angsuran = $loan->loan_nominal + $loan->interest_rate - $angsuran_dibayar;
     @endphp
     <div class="modal-body">
         @if ($loan->status == 'Belum Lunas')
