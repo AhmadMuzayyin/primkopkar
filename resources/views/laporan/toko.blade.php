@@ -1,10 +1,10 @@
 <h4 class="fw-bold fs-2 text-white text-uppercase my-3 bg-danger text-center">Laporan Penjualan Perbarang</h4>
 <div class="row">
     <div class="col">
-        <x-t-input id="from" name="from" t="date" r="" />
+        <x-t-input id="from" name="from" t="datetime-local" r="" />
     </div>
     <div class="col">
-        <x-t-input id="to" name="to" t="date" r="" />
+        <x-t-input id="to" name="to" t="datetime-local" r="" />
     </div>
     <div class="col">
         <button class="btn btn-primary" id="filter">
@@ -44,13 +44,13 @@
                 render: $.fn.dataTable.render.number(',', '.', 0, 'Rp. ')
             },
             {
-                data: 'price_credit',
-                name: 'price_credit',
+                data: 'price',
+                name: 'price',
                 render: $.fn.dataTable.render.number(',', '.', 0, 'Rp. ')
             },
             {
-                data: 'price',
-                name: 'price',
+                data: 'price_credit',
+                name: 'price_credit',
                 render: $.fn.dataTable.render.number(',', '.', 0, 'Rp. ')
             },
             {

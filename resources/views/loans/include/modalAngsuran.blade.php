@@ -1,10 +1,20 @@
 <x-t-modal id="modal-{{ $loan->id }}" title="Angsuran" lg="">
+    @php
+        $angsuran_dibayar = 0;
+        foreach ($loan->loan_payment as $payment) {
+            $angsuran_dibayar += $payment->nominal_installment;
+        }
+        $sisa_angsuran = $loan->loan_nominal - $angsuran_dibayar;
+    @endphp
     <div class="modal-body">
         @if ($loan->status == 'Belum Lunas')
             <div class="row">
                 <div class="col-9">
                     <x-t-input id="nominal-{{ $loan->id }}" name="nominal-{{ $loan->id }}"
-                        value="{{ old('nominal') }}" t="text" r=""></x-t-input>
+                        value="{{ old('nominal') }}" t="text" label="Sisa Angsuran"
+                        value="{{ number_format($sisa_angsuran) }}" readonly />
+                    <x-t-input id="nominal-{{ $loan->id }}" name="nominal-{{ $loan->id }}"
+                        value="{{ old('nominal') }}" t="text" label="Nominal Pembayaran" placeholder="Nominal" />
                 </div>
                 <div class="col text-end">
                     <button class="btn btn-primary" id="btn-{{ $loan->id }}"><i class="bx bx-save"></i></button>
