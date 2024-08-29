@@ -23,6 +23,10 @@ class LoanRepositoryImplement extends Eloquent implements LoanRepository
     {
         return $this->model->where('member_id', $member_id)->get();
     }
+    public function getLoanActive($member_id, $loan_category_id)
+    {
+        return $this->model->where('member_id', $member_id)->where('loan_category_id', $loan_category_id)->where('status', 'Belum Lunas')->first();
+    }
     public function getLoanByLoanCategoryId($loan_category_id)
     {
         return $this->model->where('loan_category_id', $loan_category_id)->get();

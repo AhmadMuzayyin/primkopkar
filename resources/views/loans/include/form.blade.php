@@ -19,10 +19,11 @@
 @isset($loan)
     @php
         $start = new \DateTime($loan->created_at);
-        $end = new \DateTime($loan->loan_date);
+        $end = new \DateTime($loan->loan_period);
         $interval = $start->diff($end);
     @endphp
-    {{-- {{ $start->diff($end) }} --}}
 @endisset
 <x-t-input id="loan_period" name="loan_period" label="Jangka Waktu" t="number" min="1"
-    value="{{ $interval->m ?? old('loan_period') }}" />
+    value="{{ $interval->days ?? old('loan_period') }}">
+    <small class="text-danger">Jangka waktu diatas bedasarkan hari</small>
+</x-t-input>

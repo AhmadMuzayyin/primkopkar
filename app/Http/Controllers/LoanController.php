@@ -8,6 +8,7 @@ use App\Repositories\Loan\LoanRepository;
 use App\Repositories\LoanCategory\LoanCategoryRepository;
 use App\Repositories\LoanPayment\LoanPaymentRepository;
 use App\Repositories\Member\MemberRepository;
+use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
 
@@ -33,19 +34,27 @@ class LoanController extends Controller
         $validated = $request->validated();
         try {
             $loanPeriod = $validated['loan_period'];
-            $currentDate = new DateTime();
-            $currentDate->modify("+$loanPeriod months");
+            $currentDate = now();
             $margin = $this->loanCategory->getLoanCategoryById($validated['loan_category_id'])->margin;
-            $interest_rate = $validated['loan_nominal'] * $margin / 100 * $loanPeriod;
+            $interest_rate = (($validated['loan_nominal'] * $margin) / 100) * $loanPeriod;
             $validated['interest_rate'] = $interest_rate;
             $validated['nominal_return'] = $validated['loan_nominal'] + $interest_rate;
             $validated['loan_date'] = date('Y-m-d');
-            $validated['loan_period'] = $currentDate->format('Y-m-d H:i:s');
+            $validated['loan_period'] = $currentDate->addDays(intval($loanPeriod));
             $validated['status'] = 'Belum Lunas';
-            $this->loanRepo->createLoans($validated);
+            $userLoan = $this->loanRepo->getLoanActive($validated['member_id'], $validated['loan_category_id']);
+            if ($userLoan) {
+                $userPeriode = new Carbon($userLoan->loan_period);
+                $validated['loan_nominal'] += $userLoan->loan_nominal;
+                $validated['interest_rate'] += $userLoan->interest_rate;
+                $validated['nominal_return'] += $userLoan->nominal_return;
+                $validated['loan_period'] = $userPeriode->addDays(intval($loanPeriod));
+                $this->loanRepo->updateLoans($validated, $userLoan->id);
+            } else {
+                $this->loanRepo->createLoans($validated);
+            }
             return redirect()->back()->with('success', 'Data pinjaman berhasil disimpan');
         } catch (\Throwable $th) {
-            dd($th->getMessage());
             return redirect()->back()->with('danger', 'Data pinjaman gagal disimpan');
         }
     }
@@ -60,14 +69,12 @@ class LoanController extends Controller
         $validated = $request->validated();
         try {
             $loanPeriod = $validated['loan_period'];
-            $currentDate = new DateTime();
-            $currentDate->modify("+$loanPeriod months");
+            $userPeriode = new Carbon($loan->created_at);
             $margin = $this->loanCategory->getLoanCategoryById($validated['loan_category_id'])->margin;
-            $interest_rate = $validated['loan_nominal'] * $margin / 100 * $loanPeriod;
+            $interest_rate = (($validated['loan_nominal'] * $margin) / 100) * $loanPeriod;
             $validated['interest_rate'] = $interest_rate;
             $validated['nominal_return'] = $validated['loan_nominal'] + $interest_rate;
-            $validated['loan_date'] = date('Y-m-d');
-            $validated['loan_period'] = $currentDate->format('Y-m-d H:i:s');
+            $validated['loan_period'] = $userPeriode->addDays(intval($loanPeriod));
             $this->loanRepo->updateLoans($validated, $loan->id);
             return redirect()->route('loans.index')->with('success', 'Data pinjaman berhasil diubah');
         } catch (\Throwable $th) {

@@ -7,6 +7,7 @@ use LaravelEasyRepository\Repository;
 interface LoanRepository extends Repository
 {
 
+    public function getLoanActive($memberId, $loanCategoryId);
     public function getLoanByMemberId($memberId);
     public function getLoanByLoanCategoryId($loanCategoryId);
     public function getLoans();

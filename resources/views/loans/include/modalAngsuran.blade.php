@@ -15,7 +15,7 @@
                         value="{{ old('angsuran') }}" t="text" label="Sisa Angsuran"
                         value="{{ number_format($sisa_angsuran) }}" readonly />
                     <x-t-input id="nominal-{{ $loan->id }}" name="nominal-{{ $loan->id }}"
-                        value="{{ old('nominal') }}" t="number" label="Nominal Pembayaran" placeholder="Nominal" />
+                        value="{{ old('nominal') }}" t="text" label="Nominal Pembayaran" placeholder="Nominal" />
                 </div>
                 <div class="col text-end">
                     <button class="btn btn-primary" id="btn-{{ $loan->id }}"><i class="bx bx-save"></i></button>
@@ -56,10 +56,15 @@
                 $('#modal-{{ $loan->id }}').on('shown.bs.modal', function() {
                     $('#table-{{ $loan->id }}').DataTable({
                         searching: false,
+                        info: false,
                     });
                     var btn = $('#btn-{{ $loan->id }}');
+                    $('#nominal-{{ $loan->id }}').on('keyup', function() {
+                        var nominal = $(this).val();
+                        $(this).val(formatRupiah(nominal));
+                    });
                     btn.on('click', function() {
-                        var nominal = $('#nominal-{{ $loan->id }}').val();
+                        var nominal = $('#nominal-{{ $loan->id }}').val().replace(/\./g, '');
                         $.ajax({
                             url: "{{ route('loans.payment', $loan->id) }}",
                             type: 'POST',
@@ -91,6 +96,22 @@
                         });
                     });
                 });
+
+                function formatRupiah(angka, prefix) {
+                    var number_string = angka.replace(/[^,\d]/g, '').toString(),
+                        split = number_string.split(','),
+                        sisa = split[0].length % 3,
+                        rupiah = split[0].substr(0, sisa),
+                        ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+                    if (ribuan) {
+                        separator = sisa ? '.' : '';
+                        rupiah += separator + ribuan.join('.');
+                    }
+
+                    rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+                    return prefix == undefined ? rupiah : rupiah ? 'Rp. ' + rupiah : '';
+                }
             });
         </script>
     @endpush
