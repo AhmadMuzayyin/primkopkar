@@ -1,4 +1,5 @@
-<x-t-modal id="modal-{{ $loan->id }}" title="Angsuran" lg="">
+<x-t-modal id="modal-{{ $loan->id }}" title="{{ $loan->status == 'Belum Lunas' ? 'Angsuran' : 'Tidak Ada Angsuran' }}"
+    lg="">
     @php
         $angsuran_dibayar = 0;
         foreach ($loan->loan_payment as $payment) {
