@@ -11,11 +11,11 @@
         @if ($loan->status == 'Belum Lunas')
             <div class="row">
                 <div class="col-9">
-                    <x-t-input id="nominal-{{ $loan->id }}" name="nominal-{{ $loan->id }}"
-                        value="{{ old('nominal') }}" t="text" label="Sisa Angsuran"
+                    <x-t-input id="angsuran-{{ $loan->id }}" name="angsuran-{{ $loan->id }}"
+                        value="{{ old('angsuran') }}" t="text" label="Sisa Angsuran"
                         value="{{ number_format($sisa_angsuran) }}" readonly />
                     <x-t-input id="nominal-{{ $loan->id }}" name="nominal-{{ $loan->id }}"
-                        value="{{ old('nominal') }}" t="text" label="Nominal Pembayaran" placeholder="Nominal" />
+                        value="{{ old('nominal') }}" t="number" label="Nominal Pembayaran" placeholder="Nominal" />
                 </div>
                 <div class="col text-end">
                     <button class="btn btn-primary" id="btn-{{ $loan->id }}"><i class="bx bx-save"></i></button>
