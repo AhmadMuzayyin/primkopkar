@@ -109,6 +109,12 @@
                 }
             })
         })
+        $('#nominal').on('input', function() {
+            var value = $(this).val()
+            if (value < 0) {
+                $(this).val(0)
+            }
+        })
         $('#showInput').on('click', '#btnSaveSetoran', function() {
             var member_id = $('#setoranSelect').val()
             var category_id = $('#setoranKategori').val()

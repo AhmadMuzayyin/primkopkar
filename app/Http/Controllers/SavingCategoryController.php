@@ -49,6 +49,10 @@ class SavingCategoryController extends Controller
     public function destroy(SavingCategory $saving_category)
     {
         try {
+            $cek = SavingCategory::with('saving_transactions')->find($saving_category->id);
+            if ($cek->saving_transactions->count() > 0) {
+                return response()->json(['status' => 'error', 'message' => 'Data tidak bisa dihapus karena sudah digunakan']);
+            }
             $this->savingCategoryRepository->deleteSavingCategory($saving_category->id);
             return response()->json(['status' => 'success', 'message' => 'Data berhasil dihapus']);
         } catch (\Throwable $th) {

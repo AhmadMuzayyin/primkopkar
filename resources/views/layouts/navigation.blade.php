@@ -90,10 +90,35 @@
         {{-- jasa --}}
         @if (Auth::user()->role == App\Role::Admin->value || Auth::user()->role == App\Role::Jasa->value)
             <li class="menu-item">
-                <a href="{{ route('jasa.index') }}" class="menu-link waves-effect waves-light">
+                <a href="#jasa" data-bs-toggle="collapse" class="menu-link waves-effect waves-light">
                     <span class="menu-icon"><i class="bx bx-home-smile"></i></span>
                     <span class="menu-text"> Transaksi Jasa </span>
+                    <span class="menu-arrow"></span>
                 </a>
+                <div class="collapse" id="jasa">
+                    <ul class="sub-menu">
+                        <li class="menu-item">
+                            <a href="{{ route('category.index') }}" class="menu-link">
+                                <span class="menu-text">Kategori</span>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="{{ route('products.index') }}" class="menu-link">
+                                <span class="menu-text">Data Barang</span>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="{{ route('stocks.index') }}" class="menu-link">
+                                <span class="menu-text">Stok Barang</span>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="{{ route('product_transactions.index') }}" class="menu-link">
+                                <span class="menu-text">Transaksi</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </li>
         @endif
         {{-- laporan --}}

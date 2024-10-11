@@ -51,10 +51,14 @@ class LoanCategoryController extends Controller
     public function destroy(LoanCategory $loan_category)
     {
         try {
+            $cek = LoanCategory::with('loans')->find($loan_category->id);
+            if ($cek->loans->count() > 0) {
+                return response()->json(['status' => 'error', 'message' => 'Data tidak bisa dihapus karena sudah digunakan']);
+            }
             $this->loanCategoryRepository->deleteLoanCategory($loan_category->id);
-            return response()->json(['message' => 'Berhasil menghapus Kategori Pinjaman']);
+            return response()->json(['status' => 'success', 'message' => 'Berhasil menghapus Kategori Pinjaman']);
         } catch (\Throwable $th) {
-            return response()->json(['message' => 'Gagal menghapus Kategori Pinjaman']);
+            return response()->json(['status' => 'error', 'message' => 'Gagal menghapus Kategori Pinjaman']);
         }
     }
 }

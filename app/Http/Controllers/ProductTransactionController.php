@@ -12,6 +12,7 @@ use App\Repositories\ProductTransaction\ProductTransactionRepository;
 use App\Repositories\Stock\StockRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class ProductTransactionController extends Controller
 {
@@ -58,12 +59,27 @@ class ProductTransactionController extends Controller
 
     public function store(Request $request, Product $product)
     {
-        $request->validate([
-            'qty' => 'required|numeric|min:1',
+        $validate = Validator::make($request->all(), [
+            'qty' => [
+                'required',
+                'numeric',
+                'min:1',
+                function ($attribute, $value, $fail) use ($product) {
+                    if ($value > $product->stock) {
+                        $fail('Jumlah tidak boleh lebih dari stok yang tersedia.');
+                    }
+                },
+            ],
         ]);
         try {
+            if ($validate->fails()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => $validate->errors()->first(),
+                ], 422);
+            }
             $last = $this->productTransaction->getLatestTransaction();
-            if (! $last) {
+            if (!$last) {
                 $transactionRequest = [
                     'user_id' => Auth::user()->id,
                     'code' => fake()->unique()->randomNumber(6),
@@ -105,7 +121,6 @@ class ProductTransactionController extends Controller
                 }
             }
             Toastr::success('Berhasil menyimpan transaksi.');
-
             return redirect()->back();
         } catch (\Throwable $th) {
             dd($th->getMessage());

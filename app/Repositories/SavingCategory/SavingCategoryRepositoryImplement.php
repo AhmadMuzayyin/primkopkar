@@ -25,7 +25,7 @@ class SavingCategoryRepositoryImplement extends Eloquent implements SavingCatego
     }
     public function getSavingCategoryById($Id)
     {
-        return $this->model->where('id', $Id)->get();
+        return $this->model->where('id', $Id)->with('saving_transactions')->get();
     }
     public function createSavingCategory($data)
     {

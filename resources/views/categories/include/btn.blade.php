@@ -27,7 +27,7 @@
                             },
                             success: function(res) {
                                 Swal.fire({
-                                    icon: 'success',
+                                    icon: res.status,
                                     title: res.message,
                                     showConfirmButton: false,
                                     timer: 1500
@@ -38,7 +38,7 @@
                             },
                             error: function(err) {
                                 Swal.fire({
-                                    icon: 'error',
+                                    icon: err.status,
                                     title: err.message,
                                     showConfirmButton: false,
                                     timer: 1500

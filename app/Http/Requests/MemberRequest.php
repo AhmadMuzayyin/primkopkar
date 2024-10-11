@@ -22,8 +22,8 @@ class MemberRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
-            'phone' => ['required', 'string', 'max:15'],
+            'name' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
+            'phone' => ['required', 'string', 'max:15', 'regex:/^[0-9]+$/'],
             'address' => ['required', 'string', 'max:255'],
         ];
     }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\Toastr;
 use App\Http\Requests\CategoryRequest;
+use App\Models\Category;
 use App\Repositories\Category\CategoryRepository;
 
 class CategoryController extends Controller
@@ -62,11 +63,14 @@ class CategoryController extends Controller
     public function destroy($categories)
     {
         try {
+            $cek = Category::with('products')->find($categories);
+            if ($cek->products->count() > 0) {
+                return response()->json(['status' => 'error', 'message' => 'Data tidak bisa dihapus karena sudah digunakan']);
+            }
             $this->categories->deleteData($categories);
-
-            return response()->json(['message' => 'Berhasil menghapus data.'], 200);
+            return response()->json(['status' => 'success', 'message' => 'Berhasil menghapus data.'], 200);
         } catch (\Throwable $th) {
-            return response()->json(['message' => 'Gagal menghapus data.'], 500);
+            return response()->json(['status' => 'error', 'message' => 'Gagal menghapus data.'], 500);
         }
     }
 }

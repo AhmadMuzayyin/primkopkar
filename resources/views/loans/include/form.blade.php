@@ -14,7 +14,7 @@
             {{ $loan_category->name }}</option>
     @endforeach
 </x-t-select>
-<x-t-input id="loan_nominal" name="loan_nominal" label="Jumlah Pinjaman" t="text"
+<x-t-input id="loan_nominal" name="loan_nominal" label="Jumlah Pinjaman" t="number" min="1"
     value="{{ $loan->loan_nominal ?? old('loan_nominal') }}" />
 @isset($loan)
     @php

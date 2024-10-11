@@ -19,8 +19,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('users', UserController::class);
-    Route::resource('members', MemberController::class);
-    Route::resource('kategori_simpanan', KategoriSimpananController::class);
+    Route::resource('members', MemberController::class)->except('show');
     Route::resource('category', CategoryController::class);
     Route::resource('products', ProductController::class)->except('show');
     Route::get('products/print', [ProductController::class, 'print'])->name('product.print');

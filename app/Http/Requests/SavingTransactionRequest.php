@@ -24,7 +24,7 @@ class SavingTransactionRequest extends FormRequest
         return [
             'member_id' => ['required', 'exists:members,id'],
             'saving_category_id' => ['required', 'exists:saving_categories,id'],
-            'nominal' => ['required', 'numeric'],
+            'nominal' => ['required', 'numeric', 'min:1'],
         ];
     }
 }

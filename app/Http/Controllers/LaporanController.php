@@ -45,6 +45,7 @@ class LaporanController extends Controller
             } else {
                 $piutangMemberNominal = ProductTransaction::where('member_id', $request->member_id)
                     ->where('type', 'Credit')
+                    ->where('amount_price', 0)
                     ->sum('amount');
                 if ($request->nominal < $piutangMemberNominal) {
                     return response()->json([
@@ -54,6 +55,7 @@ class LaporanController extends Controller
                 } else {
                     ProductTransaction::where('member_id', $request->member_id)
                         ->where('type', 'Credit')
+                        ->where('amount_price', 0)
                         ->update([
                             'amount_price' => $request->nominal
                         ]);
@@ -78,7 +80,7 @@ class LaporanController extends Controller
                 'products.price_credit',
                 'products.stock',
                 DB::raw('SUM(product_item_transactions.quantity) as total_sold'),
-                DB::raw('SUM(product_item_transactions.price * product_item_transactions.quantity) as total_revenue')
+                DB::raw('SUM(product_transactions.amount) as total_revenue')
             )
                 ->join('product_item_transactions', 'products.id', '=', 'product_item_transactions.product_id')
                 ->join('product_transactions', 'product_item_transactions.product_transaction_id', '=', 'product_transactions.id')
