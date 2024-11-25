@@ -90,30 +90,35 @@
         {{-- jasa --}}
         @if (Auth::user()->role == App\Role::Admin->value || Auth::user()->role == App\Role::Jasa->value)
             <li class="menu-item">
-                <a href="#jasa" data-bs-toggle="collapse" class="menu-link waves-effect waves-light">
+                <a href="#jasaAngkutan" data-bs-toggle="collapse" class="menu-link waves-effect waves-light">
                     <span class="menu-icon"><i class="bx bx-home-smile"></i></span>
                     <span class="menu-text"> Transaksi Jasa </span>
                     <span class="menu-arrow"></span>
                 </a>
-                <div class="collapse" id="jasa">
+                <div class="collapse" id="jasaAngkutan">
                     <ul class="sub-menu">
                         <li class="menu-item">
-                            <a href="{{ route('category.index') }}" class="menu-link">
-                                <span class="menu-text">Kategori</span>
+                            <a href="{{ route('bkph.index') }}" class="menu-link">
+                                <span class="menu-text">BKPH</span>
                             </a>
                         </li>
                         <li class="menu-item">
-                            <a href="{{ route('products.index') }}" class="menu-link">
-                                <span class="menu-text">Data Barang</span>
+                            <a href="{{ route('anggota_jasa.index') }}" class="menu-link">
+                                <span class="menu-text">Pelanggan</span>
                             </a>
                         </li>
                         <li class="menu-item">
-                            <a href="{{ route('stocks.index') }}" class="menu-link">
-                                <span class="menu-text">Stok Barang</span>
+                            <a href="{{ route('service.index') }}" class="menu-link">
+                                <span class="menu-text">Service</span>
                             </a>
                         </li>
                         <li class="menu-item">
-                            <a href="{{ route('product_transactions.index') }}" class="menu-link">
+                            <a href="{{ route('provider.index') }}" class="menu-link">
+                                <span class="menu-text">Provider</span>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="{{ route('jasa.index') }}" class="menu-link">
                                 <span class="menu-text">Transaksi</span>
                             </a>
                         </li>

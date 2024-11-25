@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AnggotaJasaController;
+use App\Http\Controllers\BkphController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KategoriSimpananController;
@@ -10,8 +12,10 @@ use App\Http\Controllers\MemberController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductTransactionController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProviderController;
 use App\Http\Controllers\SavingCategoryController;
 use App\Http\Controllers\SavingController;
+use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\TransaksiJasaController;
 use App\Http\Controllers\UserController;
@@ -46,6 +50,30 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('savings/{saving}/destroy', 'destroy')->name('destroy');
         Route::get('savings/history/{member}', 'history')->name('history');
         Route::delete('savings/history/{saving}/destroy', 'historyDestroy')->name('history.destroy');
+    });
+    Route::controller(BkphController::class)->as('bkph.')->group(function () {
+        Route::get('bkph', 'index')->name('index');
+        Route::post('bkph/store', 'store')->name('store');
+        Route::patch('bkph/{bkph}/update', 'update')->name('update');
+        Route::delete('bkph/{bkph}/destroy', 'destroy')->name('destroy');
+    });
+    Route::controller(AnggotaJasaController::class)->as('anggota_jasa.')->group(function () {
+        Route::get('anggota_jasa', 'index')->name('index');
+        Route::post('anggota_jasa/store', 'store')->name('store');
+        Route::patch('anggota_jasa/{customer}/update', 'update')->name('update');
+        Route::delete('anggota_jasa/{customer}/destroy', 'destroy')->name('destroy');
+    });
+    Route::controller(ServiceController::class)->as('service.')->group(function () {
+        Route::get('service', 'index')->name('index');
+        Route::post('service/store', 'store')->name('store');
+        Route::patch('service/{service}/update', 'update')->name('update');
+        Route::delete('service/{service}/destroy', 'destroy')->name('destroy');
+    });
+    Route::controller(ProviderController::class)->as('provider.')->group(function () {
+        Route::get('provider', 'index')->name('index');
+        Route::post('provider/store', 'store')->name('store');
+        Route::patch('provider/{provider}/update', 'update')->name('update');
+        Route::delete('provider/{provider}/destroy', 'destroy')->name('destroy');
     });
     Route::controller(TransaksiJasaController::class)->as('jasa.')->group(function () {
         Route::get('jasa', 'index')->name('index');
