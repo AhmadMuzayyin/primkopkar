@@ -89,7 +89,7 @@
                                             <option value="{{ $category->id }}">{{ $category->name }}</option>
                                         @endforeach
                                     </x-t-select>
-                                    <x-t-input id="nominal" name="nominal" value="" t="number" min="1" placeholder="Nominal Penarikan" />
+                                    <x-t-input id="nominal" name="nominal" value="" min="1000" t="number" min="1" placeholder="Nominal Penarikan" />
                                 </div>
                                 <div class="col text-end">
                                     <button class="btn btn-primary" id="btnSavePenarikan"><i class="bx bx-save"></i></button>
