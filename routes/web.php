@@ -88,6 +88,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('laporan/toko/piutang_member', 'piutangMember')->name('piutang_member');
         Route::post('laporan/toko/piutang_member/update', 'updatePiutangMember')->name('piutang_member.update');
         Route::get('laporan/toko/perbarang', 'perBarang')->name('perbarang');
+        Route::get('laporan/jasa', 'jasa')->name('jasa');
+        Route::get('laporan/simpanan', 'simpanan')->name('simpanan');
+        Route::get('laporan/pinjaman', 'pinjaman')->name('pinjaman');
     });
     Route::get('dashboard', DashboardController::class)->name('dashboard');
 });

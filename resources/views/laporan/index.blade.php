@@ -3,9 +3,9 @@
     <ul class="nav nav-tabs" role="tablist">
         @if (Auth::user()->role == App\Role::Admin->value || Auth::user()->role == App\Role::Bendahara->value)
             <li class="nav-item" role="presentation">
-                <a href="{{ url()->current() . '?tab=Simpan Pinjam' }}"
-                    class="nav-link {{ request()->get('tab') == 'Simpan Pinjam' || request()->get('tab') == null ? 'active' : '' }}"
-                    role="tab" tabindex="-1">
+                <a href="{{ url()->current() . '?tab=simpan_pinjam' }}"
+                    class="nav-link {{ request()->get('tab') == 'simpan_pinjam' ? 'active' : '' }}" role="tab"
+                    tabindex="-1">
                     <span class="d-inline-block d-sm-none"><i class="mdi mdi-home-variant"></i></span>
                     <span class="d-none d-sm-inline-block">Simpan Pinjam</span>
                 </a>
@@ -13,8 +13,8 @@
         @endif
         @if (Auth::user()->role == App\Role::Admin->value || Auth::user()->role == App\Role::Kasir->value)
             <li class="nav-item" role="presentation">
-                <a href="{{ url()->current() . '?tab=Pertokoan' }}"
-                    class="nav-link {{ request()->get('tab') == 'Pertokoan' ? 'active' : '' }}">
+                <a href="{{ url()->current() . '?tab=toko' }}"
+                    class="nav-link {{ request()->get('tab') == 'toko' ? 'active' : '' }}">
                     <span class="d-inline-block d-sm-none"><i class="mdi mdi-account"></i></span>
                     <span class="d-none d-sm-inline-block">Pertokoan</span>
                 </a>
@@ -22,8 +22,8 @@
         @endif
         @if (Auth::user()->role == App\Role::Admin->value || Auth::user()->role == App\Role::Jasa->value)
             <li class="nav-item" role="presentation">
-                <a href="{{ url()->current() . '?tab=Jasa Angkutan' }}"
-                    class="nav-link {{ request()->get('tab') == 'Jasa Angkutan' ? 'active' : '' }}">
+                <a href="{{ url()->current() . '?tab=jasa' }}"
+                    class="nav-link {{ request()->get('tab') == 'jasa' ? 'active' : '' }}">
                     <span class="d-inline-block d-sm-none"><i class="mdi mdi-account"></i></span>
                     <span class="d-none d-sm-inline-block">Jasa Angkutan</span>
                 </a>
@@ -31,9 +31,9 @@
         @endif
     </ul>
     <div class="tab-content">
-        @if (request()->get('tab') == 'Simpan Pinjam')
+        @if (request()->get('tab') == 'simpan_pinjam' || request()->get('tab') == null)
             @include('laporan.koperasi')
-        @elseif (request()->get('tab') == 'Pertokoan')
+        @elseif (request()->get('tab') == 'toko')
             @include('laporan.toko')
         @else
             @include('laporan.jasa')

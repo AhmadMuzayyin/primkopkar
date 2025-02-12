@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Invoice;
+use App\Models\Loan;
 use App\Models\Member;
 use App\Models\Product;
 use App\Models\ProductTransaction;
+use App\Models\SavingTrasaction;
+use App\Repositories\Saving\SavingRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -109,5 +113,92 @@ class LaporanController extends Controller
                 })
                 ->make(true);
         }
+    }
+    public function jasa(Request $request)
+    {
+        if ($request->ajax()) {
+            $query = Invoice::with(['woodShippingOrder.wood', 'woodShippingOrder.customer', 'woodShippingOrder.provider'])
+                ->when($request->from && $request->to, function ($q) use ($request) {
+                    return $q->whereBetween('tgl_faktur', [$request->from, $request->to]);
+                });
+
+            return DataTables::of($query)
+                ->addIndexColumn()
+                ->addColumn('pelanggan', function ($row) {
+                    return $row->woodShippingOrder->customer->nama ?? '-';
+                })
+                ->addColumn('bkph', function ($row) {
+                    return $row->woodShippingOrder->provider->bkph->nama ?? '-';
+                })
+                ->addColumn('provider', function ($row) {
+                    return $row->woodShippingOrder->provider->nama ?? '-';
+                })
+                ->addColumn('total', function ($row) {
+                    return $row->total_pembayaran;
+                })
+                ->addColumn('status', function ($row) {
+                    return $row->status;
+                })
+                ->rawColumns(['pelanggan', 'bkph', 'provider', 'total', 'status'])
+                ->make(true);
+        }
+
+        return response()->json(['error' => 'Bad Request'], 400);
+    }
+    public function simpanan(Request $request)
+    {
+        if ($request->ajax()) {
+            $query = SavingTrasaction::with('member', 'savingCategory')
+                ->when($request->from && $request->to, function ($q) use ($request) {
+                    return $q->whereBetween('tgl_faktur', [$request->from, $request->to]);
+                });
+
+            return DataTables::of($query)
+                ->addIndexColumn()
+                ->addColumn('member', function ($row) {
+                    return $row->member->name ?? '-';
+                })
+                ->addColumn('kategori', function ($row) {
+                    return $row->savingCategory->name ?? '-';
+                })
+                ->addColumn('saldo', function ($row) {
+                    return $row->nominal ?? '-';
+                })
+                ->rawColumns(['member', 'kategori', 'saldo',])
+                ->make(true);
+        }
+
+        return response()->json(['error' => 'Bad Request'], 400);
+    }
+    public function pinjaman(Request $request)
+    {
+        if ($request->ajax()) {
+            $query = Loan::with('member', 'loan_category', 'loan_payment')
+                ->when($request->from && $request->to, function ($q) use ($request) {
+                    return $q->whereBetween('tgl_faktur', [$request->from, $request->to]);
+                });
+
+            return DataTables::of($query)
+                ->addIndexColumn()
+                ->addColumn('member', function ($row) {
+                    return $row->member->name ?? '-';
+                })
+                ->addColumn('nominal', function ($row) {
+                    return $row->loan_nominal ?? '-';
+                })
+                ->addColumn('tgl_pinjaman', function ($row) {
+                    return $row->loan_date ?? '-';
+                })
+                ->addColumn('tgl_pelunasan', function ($row) {
+                    return $row->loan_periode ?? '-';
+                })
+                ->addColumn('angsuran', function ($row) {
+                    return $row->interest_rate ?? '-';
+                })
+                ->rawColumns(['member', 'nominal', 'tgl_pinjaman', 'tgl_pelunasan', 'angsuran'])
+                ->make(true);
+        }
+
+        return response()->json(['error' => 'Bad Request'], 400);
     }
 }

@@ -13,4 +13,8 @@ class Member extends Model
     {
         return $this->hasMany(ProductTransaction::class);
     }
+    public function member_saving()
+    {
+        return $this->hasOne(MemberSaving::class);
+    }
 }
