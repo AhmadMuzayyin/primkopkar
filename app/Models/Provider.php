@@ -13,4 +13,8 @@ class Provider extends Model
     {
         return $this->belongsTo(Service::class);
     }
+    public function bkph()
+    {
+        return $this->belongsTo(Bkph::class);
+    }
 }

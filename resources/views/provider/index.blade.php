@@ -24,6 +24,7 @@
                         <thead>
                             <tr>
                                 <th>No</th>
+                                <th>BKPH</th>
                                 <th>Service</th>
                                 <th>Nama</th>
                                 <th>Alamat</th>
@@ -37,6 +38,7 @@
                             @foreach ($providers as $provider)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $provider->bkph->nama }}</td>
                                     <td>{{ $provider->service->nama }}</td>
                                     <td>{{ $provider->nama }}</td>
                                     <td>{{ $provider->alamat }}</td>

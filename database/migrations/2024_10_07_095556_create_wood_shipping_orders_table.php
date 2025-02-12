@@ -25,6 +25,11 @@ return new class extends Migration
             $table->text('lokasi_pengambilan');
             $table->text('lokasi_pengantaran');
             $table->enum('jenis_pengiriman', [JenisPengiriman::m3->value, JenisPengiriman::angkutan->value]);
+            $table->decimal('harga_per_m3', 10, 2)->nullable();
+            $table->decimal('harga_per_angkutan', 10, 2)->nullable();
+            $table->integer('kapasitas_angkutan_m3')->nullable();
+            $table->decimal('total_biaya', 15, 2)->nullable();
+            $table->enum('status', ['pending', 'success', 'cancel'])->default('pending');
             $table->timestamps();
         });
     }

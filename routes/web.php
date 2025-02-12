@@ -77,6 +77,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
     Route::controller(TransaksiJasaController::class)->as('jasa.')->group(function () {
         Route::get('jasa', 'index')->name('index');
+        Route::post('jasa/store', 'store')->name('store');
+        Route::get('/jasa/{id}/edit', 'edit');
+        Route::patch('jasa/{id}/update', 'update')->name('update');
+        Route::delete('jasa/{id}/destroy', 'destroy')->name('destroy');
+        Route::post('jasa/proses', 'proses')->name('proses');
     });
     Route::controller(LaporanController::class)->as('laporan.')->group(function () {
         Route::get('laporan', 'index')->name('index');

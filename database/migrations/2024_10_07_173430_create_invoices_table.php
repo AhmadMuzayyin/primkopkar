@@ -15,10 +15,10 @@ return new class extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(WoodShippingOrder::class)->constrained()->cascadeOnDelete();
-            $table->string('no_faktur');
+            $table->string('no_faktur')->unique();
             $table->date('tgl_faktur');
-            $table->integer('total_harga');
-            $table->date('tgl_jatuh_tempo');
+            $table->integer('total_pembayaran');
+            $table->date('tgl_jatuh_tempo')->nullable();
             $table->enum('status', ['Lunas', 'Belum Lunas']);
             $table->timestamps();
         });
