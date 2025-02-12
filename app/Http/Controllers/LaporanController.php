@@ -158,6 +158,9 @@ class LaporanController extends Controller
                 ->addColumn('member', function ($row) {
                     return $row->member->name ?? '-';
                 })
+                ->addColumn('debit_credit', function ($row) {
+                    return $row->transaction_type == 'Setoran' ? 'Debit' : 'Credit' ?? '-';
+                })
                 ->addColumn('kategori', function ($row) {
                     return $row->savingCategory->name ?? '-';
                 })

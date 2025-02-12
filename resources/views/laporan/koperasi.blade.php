@@ -17,8 +17,9 @@
         <tr>
             <th>No</th>
             <th>Member</th>
+            <th>Debit/Credit</th>
             <th>Kategori</th>
-            <th>Total Saldo</th>
+            <th>Saldo</th>
         </tr>
     </thead>
 </table>
@@ -33,6 +34,10 @@
             {
                 data: 'member',
                 name: 'member'
+            },
+            {
+                data: 'debit_credit',
+                name: 'debit_credit',
             },
             {
                 data: 'kategori',
