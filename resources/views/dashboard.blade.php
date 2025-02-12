@@ -10,7 +10,7 @@
                     <div class="row d-flex align-items-center mb-4">
                         <div class="col-8">
                             <h4 class="d-flex align-items-center mb-0">
-                                Rp. 17.21
+                                {{ 'Rp.' . number_format($toko) }}
                             </h4>
                         </div>
                     </div>
@@ -34,7 +34,7 @@
                     <div class="row d-flex align-items-center mb-4">
                         <div class="col-8">
                             <h4 class="d-flex align-items-center mb-0">
-                                Rp. 1875.54
+                                {{ 'Rp.' . number_format($simpanan) }}
                             </h4>
                         </div>
                     </div>
@@ -58,7 +58,7 @@
                     <div class="row d-flex align-items-center mb-4">
                         <div class="col-8">
                             <h4 class="d-flex align-items-center mb-0">
-                                Rp. 784.62
+                                {{ 'Rp.' . number_format($pinjaman) }}
                             </h4>
                         </div>
                     </div>
@@ -83,7 +83,7 @@
                     <div class="row d-flex align-items-center mb-4">
                         <div class="col-8">
                             <h4 class="d-flex align-items-center mb-0">
-                                Rp. 1,15,187
+                                {{ 'Rp.' . number_format($jasa) }}
                             </h4>
                         </div>
                     </div>
