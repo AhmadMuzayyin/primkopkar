@@ -23,9 +23,10 @@ class CategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'min:3'],
+            'name' => ['required', 'string', 'min:3', 'regex:/^[A-Za-z\s]+$/'],
             'slug' => [
-                'required', 'string',
+                'required',
+                'string',
                 Rule::unique('categories', 'slug')->ignore($this->category),
             ],
         ];

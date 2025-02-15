@@ -57,6 +57,18 @@
         var table = $('#jasa').DataTable({
             processing: true,
             serverSide: true,
+            dom: 'Bfrtip',
+            buttons: [{
+                    extend: 'print',
+                    text: '<i class="bx bx-printer"></i> Print Laporan',
+                    className: 'btn btn-primary'
+                },
+                {
+                    extend: 'pdfHtml5',
+                    text: '<i class="bx bx-file"></i> Export PDF',
+                    className: 'btn btn-success'
+                },
+            ],
             ajax: {
                 url: '{{ route('laporan.jasa') }}',
                 data: function(d) {

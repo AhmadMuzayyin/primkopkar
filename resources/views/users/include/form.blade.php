@@ -9,4 +9,6 @@
         {{ App\Role::Bendahara->value }}</option>
     <option value="Kasir"{{ isset($user) ? ($user->role == App\Role::Kasir->value ? 'selected' : '') : '' }}>
         {{ App\Role::Kasir->value }}</option>
+    <option value="Kasir"{{ isset($user) ? ($user->role == App\Role::Jasa->value ? 'selected' : '') : '' }}>
+        {{ App\Role::Jasa->value }}</option>
 </x-t-select>

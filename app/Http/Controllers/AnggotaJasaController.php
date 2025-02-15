@@ -16,10 +16,11 @@ class AnggotaJasaController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nama' => 'required|string|max:255',
+            'nama' => 'required|string|max:255|regex:/^[A-Za-z\s]+$/',
             'alamat' => 'required|string',
             'telepon' => 'required|string|unique:customers,telepon',
         ], [
+            'nama.regex' => 'Nama pelanggan hanya boleh berisi huruf dan spasi',
             'nama.required' => 'Nama pelanggan harus diisi',
             'alamat.required' => 'Alamat pelanggan harus diisi',
             'telepon.required' => 'Telepon pelanggan harus diisi',
@@ -35,10 +36,11 @@ class AnggotaJasaController extends Controller
     public function update(Request $request, Customer $customer)
     {
         $validated = $request->validate([
-            'nama' => 'required|string|max:255',
+            'nama' => 'required|string|max:255|regex:/^[A-Za-z\s]+$/',
             'alamat' => 'required|string',
             'telepon' => 'required|string|unique:customers,telepon,' . $customer->id,
         ], [
+            'nama.regex' => 'Nama pelanggan hanya boleh berisi huruf dan spasi',
             'nama.required' => 'Nama pelanggan harus diisi',
             'alamat.required' => 'Alamat pelanggan harus diisi',
             'telepon.required' => 'Telepon pelanggan harus diisi',

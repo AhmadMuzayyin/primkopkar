@@ -25,7 +25,7 @@ class ProductRequest extends FormRequest
         return [
             'barcode' => ['required', 'string', 'min:10', 'max:13', Rule::unique('products')->ignore($this->product)],
             'category_id' => ['required'],
-            'name' => ['required', 'string', 'min:5'],
+            'name' => ['required', 'string', 'min:5', 'regex:/^[A-Za-z\s]+$/'],
             'price' => ['required', 'numeric', 'min:1000'],
             'purchase_price' => ['required', 'numeric', 'min:1000'],
             'margin' => ['required', 'numeric', 'min:1'],
@@ -33,7 +33,7 @@ class ProductRequest extends FormRequest
             'shu' => ['required', 'numeric', 'min:1'],
             'price_credit' => ['required', 'numeric', 'min:1000', function ($attribute, $value, $fail) {
                 if ($value <= request()->price) {
-                    $fail('The '.$attribute.' must be greater than the price.');
+                    $fail('The ' . $attribute . ' must be greater than the price.');
                 }
             }],
             'description' => ['nullable'],

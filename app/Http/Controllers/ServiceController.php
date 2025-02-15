@@ -21,13 +21,14 @@ class ServiceController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nama' => 'required',
+            'nama' => 'required|regex:/^[A-Za-z\s]+$/',
             'deskripsi' => 'required',
             'harga_per_m3' => 'required|numeric',
             'harga_per_angkutan' => 'required|numeric',
             'volume_max' => 'required|numeric',
             'persentase_komisi' => 'required|numeric',
         ], [
+            'nama.regex' => 'Nama Layanan harus berupa huruf',
             'nama.required' => 'Nama Layanan harus diisi',
             'deskripsi.required' => 'Deskripsi harus diisi',
             'harga_per_m3.required' => 'Harga Per M3 harus diisi',
@@ -49,13 +50,14 @@ class ServiceController extends Controller
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            'nama' => 'required',
+            'nama' => 'required|regex:/^[A-Za-z\s]+$/',
             'deskripsi' => 'required',
             'harga_per_m3' => 'required|numeric',
             'harga_per_angkutan' => 'required|numeric',
             'volume_max' => 'required|numeric',
             'persentase_komisi' => 'required|numeric',
         ], [
+            'nama.regex' => 'Nama Layanan harus berupa huruf',
             'nama.required' => 'Nama Layanan harus diisi',
             'deskripsi.required' => 'Deskripsi harus diisi',
             'harga_per_m3.required' => 'Harga Per M3 harus diisi',

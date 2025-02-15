@@ -21,7 +21,7 @@ class LoanCategoryController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name' => 'required|string',
+            'name' => 'required|string|regex:/^[A-Za-z\s]+$/',
             'margin' => 'required|numeric',
         ]);
         try {
@@ -38,7 +38,7 @@ class LoanCategoryController extends Controller
     public function update(Request $request, LoanCategory $loan_category)
     {
         $data = $request->validate([
-            'name' => 'required|string',
+            'name' => 'required|string|regex:/^[A-Za-z\s]+$/',
             'margin' => 'required|numeric',
         ]);
         try {

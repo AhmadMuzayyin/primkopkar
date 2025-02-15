@@ -23,9 +23,14 @@ class UserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'min:10'],
+            'name' => [
+                'required',
+                'min:10',
+                'regex:/^[A-Za-z\s]+$/'
+            ],
             'email' => [
-                'required', 'email',
+                'required',
+                'email',
                 Rule::unique('users', 'email')->ignore($this->user),
             ],
             'password' => ['required', 'min:8', 'confirmed'],

@@ -22,13 +22,14 @@ class ProviderController extends Controller
         $validated = $request->validate([
             'bkph_id' => 'required|exists:bkphs,id',
             'service_id' => 'required|exists:services,id',
-            'nama' => 'required|string|max:255',
+            'nama' => 'required|string|max:255|regex:/^[A-Za-z\s]+$/',
             'alamat' => 'required|string|max:255',
             'no_telp' => 'required|string|max:255',
         ], [
             'service_id.required' => 'Service is required',
             'service_id.exists' => 'Service is not exists',
             'nama.required' => 'Nama is required',
+            'nama.regex' => 'Nama must be alphabet',
             'alamat.required' => 'Alamat is required',
             'no_telp.required' => 'No Telp is required',
             'no_telp.max' => 'No Telp must be less than 255 characters',
@@ -48,13 +49,14 @@ class ProviderController extends Controller
         $validated = $request->validate([
             'bkph_id' => 'required|exists:bkphs,id',
             'service_id' => 'required|exists:services,id',
-            'nama' => 'required|string|max:255',
+            'nama' => 'required|string|max:255|regex:/^[A-Za-z\s]+$/',
             'alamat' => 'required|string|max:255',
             'no_telp' => 'required|string|max:255',
         ], [
             'service_id.required' => 'Service is required',
             'service_id.exists' => 'Service is not exists',
             'nama.required' => 'Nama is required',
+            'nama.regex' => 'Nama must be alphabet',
             'alamat.required' => 'Alamat is required',
             'no_telp.required' => 'No Telp is required',
             'no_telp.max' => 'No Telp must be less than 255 characters',

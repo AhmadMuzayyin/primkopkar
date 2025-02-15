@@ -21,7 +21,7 @@ class SavingCategoryController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name' => 'required|string',
+            'name' => 'required|string|regex:/^[A-Za-z\s]+$/',
         ]);
         try {
             $this->savingCategoryRepository->createSavingCategory($data);
@@ -37,7 +37,7 @@ class SavingCategoryController extends Controller
     public function update(Request $request, SavingCategory $saving_category)
     {
         $data = $request->validate([
-            'name' => 'required|string',
+            'name' => 'required|string|regex:/^[A-Za-z\s]+$/',
         ]);
         try {
             $this->savingCategoryRepository->updateSavingCategory($saving_category->id, $data);

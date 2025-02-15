@@ -79,6 +79,11 @@
                             </a>
                         </li>
                         <li class="menu-item">
+                            <a href="{{ route('restocking.index') }}" class="menu-link">
+                                <span class="menu-text">Kulakan</span>
+                            </a>
+                        </li>
+                        <li class="menu-item">
                             <a href="{{ route('product_transactions.index') }}" class="menu-link">
                                 <span class="menu-text">Transaksi</span>
                             </a>

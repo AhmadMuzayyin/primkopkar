@@ -16,12 +16,13 @@ class BkphController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nama' => 'required|string|max:255',
+            'nama' => 'required|string|max:255|regex:/^[A-Za-z\s]+$/',
             'wilayah' => 'required|string|max:255',
             'alamat' => 'required|string',
             'kontak' => 'required|numeric',
             'jenis_hutan' => 'required|string|max:255',
         ], [
+            'nama.regex' => 'Nama BKPH hanya boleh berisi huruf dan spasi',
             'nama.required' => 'Nama BKPH harus diisi',
             'wilayah.required' => 'Wilayah harus diisi',
             'alamat.required' => 'Alamat harus diisi',
@@ -39,12 +40,13 @@ class BkphController extends Controller
     public function update(Request $request, Bkph $bkph)
     {
         $validated = $request->validate([
-            'nama' => 'required|string|max:255',
+            'nama' => 'required|string|max:255|regex:/^[A-Za-z\s]+$/',
             'wilayah' => 'required|string|max:255',
             'alamat' => 'required|string',
             'kontak' => 'required|numeric',
             'jenis_hutan' => 'required|string|max:255',
         ], [
+            'nama.regex' => 'Nama BKPH hanya boleh berisi huruf dan spasi',
             'nama.required' => 'Nama BKPH harus diisi',
             'wilayah.required' => 'Wilayah harus diisi',
             'alamat.required' => 'Alamat harus diisi',

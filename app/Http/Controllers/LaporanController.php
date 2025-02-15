@@ -7,6 +7,7 @@ use App\Models\Loan;
 use App\Models\Member;
 use App\Models\Product;
 use App\Models\ProductTransaction;
+use App\Models\Restocking;
 use App\Models\SavingTrasaction;
 use App\Repositories\Saving\SavingRepository;
 use Illuminate\Http\Request;
@@ -69,6 +70,31 @@ class LaporanController extends Controller
                     ]);
                 }
             }
+        }
+    }
+    public function kulakan()
+    {
+        if (request()->ajax()) {
+            $from = request()->from;
+            $to = request()->to;
+            $restockings = Restocking::with('product', 'user')->when($from && $to, function ($query) use ($from, $to) {
+                return $query->whereBetween('created_at', [$from, $to]);
+            })->get();
+            return DataTables::of($restockings)
+                ->addIndexColumn()
+                ->addColumn('kasir', function ($row) {
+                    return $row->user->name;
+                })
+                ->addColumn('barang', function ($row) {
+                    return $row->product->name;
+                })
+                ->addColumn('purchase_price', function ($row) {
+                    return $row->purchase_price;
+                })
+                ->addColumn('stock', function ($row) {
+                    return $row->stock;
+                })
+                ->make(true);
         }
     }
     public function perBarang()

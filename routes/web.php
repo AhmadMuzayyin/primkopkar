@@ -13,6 +13,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductTransactionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProviderController;
+use App\Http\Controllers\RestockingController;
 use App\Http\Controllers\SavingCategoryController;
 use App\Http\Controllers\SavingController;
 use App\Http\Controllers\ServiceController;
@@ -26,6 +27,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('members', MemberController::class)->except('show');
     Route::resource('category', CategoryController::class);
     Route::resource('products', ProductController::class)->except('show');
+    Route::resource('restocking', RestockingController::class)->except('show');
+    Route::post('restocking/{product}/get-product', [RestockingController::class, 'getProduct'])->name('restocking.get.product');
     Route::get('products/print', [ProductController::class, 'print'])->name('product.print');
     Route::resource('stocks', StockController::class);
     Route::controller(ProductTransactionController::class)->as('product_transactions.')->group(function () {
@@ -87,6 +90,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('laporan', 'index')->name('index');
         Route::get('laporan/toko/piutang_member', 'piutangMember')->name('piutang_member');
         Route::post('laporan/toko/piutang_member/update', 'updatePiutangMember')->name('piutang_member.update');
+        Route::get('laporan/toko/kulakan', 'kulakan')->name('kulakan');
         Route::get('laporan/toko/perbarang', 'perBarang')->name('perbarang');
         Route::get('laporan/jasa', 'jasa')->name('jasa');
         Route::get('laporan/simpanan', 'simpanan')->name('simpanan');
