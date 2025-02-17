@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('payments', function (Blueprint $table) {
+        Schema::table('wood_shipping_orders', function (Blueprint $table) {
             $table->string('code')->unique()->after('id');
         });
     }
@@ -21,7 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('payments', function (Blueprint $table) {
+        Schema::table('wood_shipping_orders', function (Blueprint $table) {
             $table->dropColumn('code');
         });
     }
