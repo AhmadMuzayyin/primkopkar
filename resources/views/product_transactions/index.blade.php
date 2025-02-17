@@ -6,7 +6,8 @@
                 <div class="card-header">
                     <div class="row">
                         <div class="col-3">
-                            <x-t-input id="search" name="barcode" t="search" label='' placeholder="Barcode" />
+                            <x-t-input id="search" name="barcode" t="search" label=''
+                                placeholder="Barcode/Nama Barang" />
                         </div>
                         <div class="col">
                         </div>
@@ -154,79 +155,102 @@
                     setTimeout(() => {
                         var value = search.val();
                         $.ajax({
-                            url: "/product_transactions/find/" + value,
-                            type: 'GET',
+                            url: "/product_transactions/find",
+                            type: 'POST',
+                            data: {
+                                _token: "{{ csrf_token() }}",
+                                param: value
+                            },
                             success: function(response) {
-                                var stock = $('#stock').text(response.data.stock);
-                                if (response.data.stock > 0) {
-                                    var form = $('#formSaveProduct');
-                                    var modal = new bootstrap.Modal(document.getElementById(
-                                        'saveProduct'));
-                                    modal.show();
-                                    modal._element.addEventListener('shown.bs.modal',
-                                        function() {
-                                            $('#qty').focus();
+                                if (response.data != null) {
+                                    if (response.data.stock == 0) {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Stok tidak tersedia',
+                                            showConfirmButton: false,
+                                            timer: 1000
                                         });
-                                    $('#saveProduct').on('shown.bs.modal', function() {
-                                        $('#qty').on('keydown', function(e) {
-                                            if (e.key === 'Enter') {
-                                                e.preventDefault();
-                                                var url =
-                                                    '/product_transactions/store/' +
-                                                    response.data.barcode
-                                                $.ajax({
-                                                    url: url,
-                                                    type: 'POST',
-                                                    data: form
-                                                        .serialize(),
-                                                    success: function(
-                                                        response
-                                                    ) {
-                                                        Swal.fire({
-                                                            icon: 'success',
-                                                            title: response
-                                                                .message,
-                                                            showConfirmButton: false,
-                                                            timer: 1000
-                                                        });
-                                                        setTimeout
-                                                            (
-                                                                () => {
-                                                                    window
-                                                                        .location
-                                                                        .reload();
-                                                                },
-                                                                1500
-                                                            );
-                                                    },
-                                                    error: function(
-                                                        err) {
-                                                        Swal.fire({
-                                                            icon: 'error',
-                                                            title: err
-                                                                .responseJSON
-                                                                .message,
-                                                            showConfirmButton: false,
-                                                            timer: 1000
-                                                        });
-                                                        setTimeout
-                                                            (
-                                                                () => {
-                                                                    window
-                                                                        .location
-                                                                        .reload();
-                                                                },
-                                                                1500
-                                                            );
+                                        setTimeout(() => {
+                                            window.location.reload();
+                                        }, 1500);
+                                    } else {
+                                        var stock = $('#stock').text(response.data
+                                            .stock);
+                                        var form = $('#formSaveProduct');
+                                        var modal = new bootstrap.Modal(document
+                                            .getElementById(
+                                                'saveProduct'));
+                                        modal.show();
+                                        modal._element.addEventListener(
+                                            'shown.bs.modal',
+                                            function() {
+                                                $('#qty').focus();
+                                            });
+                                        $('#saveProduct').on('shown.bs.modal',
+                                            function() {
+                                                $('#qty').on('keydown', function(
+                                                    e) {
+                                                    if (e.key === 'Enter') {
+                                                        e.preventDefault();
+                                                        var url =
+                                                            '/product_transactions/store/' +
+                                                            response.data
+                                                            .barcode
+                                                        $.ajax({
+                                                            url: url,
+                                                            type: 'POST',
+                                                            data: form
+                                                                .serialize(),
+                                                            success: function(
+                                                                response
+                                                            ) {
+                                                                Swal.fire({
+                                                                    icon: 'success',
+                                                                    title: response
+                                                                        .message,
+                                                                    showConfirmButton: false,
+                                                                    timer: 1000
+                                                                });
+                                                                setTimeout
+                                                                    (
+                                                                        () => {
+                                                                            window
+                                                                                .location
+                                                                                .reload();
+                                                                        },
+                                                                        1500
+                                                                    );
+                                                            },
+                                                            error: function(
+                                                                err
+                                                            ) {
+                                                                Swal.fire({
+                                                                    icon: 'error',
+                                                                    title: err
+                                                                        .responseJSON
+                                                                        .message,
+                                                                    showConfirmButton: false,
+                                                                    timer: 1000
+                                                                });
+                                                                setTimeout
+                                                                    (
+                                                                        () => {
+                                                                            window
+                                                                                .location
+                                                                                .reload();
+                                                                        },
+                                                                        1500
+                                                                    );
+                                                            }
+                                                        })
                                                     }
-                                                })
-                                            }
-                                        });
-                                    })
+                                                });
+                                            })
+                                    }
                                 } else {
                                     Swal.fire({
                                         icon: 'error',
-                                        title: 'Stok tidak tersedia',
+                                        title: 'Barang tidak tersedia',
                                         showConfirmButton: false,
                                         timer: 1000
                                     });
@@ -234,6 +258,17 @@
                                         window.location.reload();
                                     }, 1500);
                                 }
+                            },
+                            error: function(err) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: err.responseJSON.message,
+                                    showConfirmButton: false,
+                                    timer: 1000
+                                });
+                                setTimeout(() => {
+                                    window.location.reload();
+                                }, 1500);
                             }
                         })
                     }, 500);

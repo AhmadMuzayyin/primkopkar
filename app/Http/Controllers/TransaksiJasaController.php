@@ -52,6 +52,7 @@ class TransaksiJasaController extends Controller
             }
 
             WoodShippingOrder::create([
+                'code' => 'JSA/' . date('Ymd') . '/' . rand(100, 999),
                 'customer_id' => $validated['customer_id'],
                 'provider_id' => $validated['provider_id'],
                 'wood_id' => $wood->id,
@@ -153,7 +154,7 @@ class TransaksiJasaController extends Controller
             // Hitung total harga berdasarkan jenis pengiriman
             foreach ($orders as $key => $order) {
                 Invoice::create([
-                    'wood_shipping_order_id' => $order->id,
+                    'code' => $order->code,
                     'no_faktur' => 'INV/' . date('Ymd') . '/' . $order->id,
                     'tgl_faktur' => now(),
                     'total_pembayaran' => $totalHarga,

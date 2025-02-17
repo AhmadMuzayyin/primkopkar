@@ -40,10 +40,10 @@ class ProductTransactionController extends Controller
         return view('product_transactions.index', compact('transactions', 'members'));
     }
 
-    public function find(Product $product)
+    public function find(Request $request)
     {
         try {
-            $product = $this->product->findByBarcode($product->barcode);
+            $product = Product::where('barcode', $request['param'])->orWhere('name', 'like', '%' . $request['param'] . '%')->first();
 
             return response()->json([
                 'status' => 'success',

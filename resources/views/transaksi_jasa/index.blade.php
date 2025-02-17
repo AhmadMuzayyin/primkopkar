@@ -57,7 +57,7 @@
 
                             <!-- Berat Kayu -->
                             <div class="col-md-6 mt-3">
-                                <x-t-input id="berat" name="berat" t="text" label="Berat Kayu" required />
+                                <x-t-input id="berat" name="berat" t="number" label="Berat Kayu" required />
                             </div>
 
                             <!-- Panjang Kayu -->
