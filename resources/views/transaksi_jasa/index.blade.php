@@ -202,32 +202,18 @@
             @csrf
             <div class="modal-body">
                 <div class="row">
-                    <!-- Tanggal Jatuh Tempo -->
                     <div class="col-md-12 mt-3">
-                        <x-t-select id="tgl_jatuh_tempo" name="tgl_jatuh_tempo" label="Tanggal Jatuh Tempo" required>
-                            <option value="">-- Pilih Jatuh Tempo --</option>
-                            <option value="1">Cash</option>
-                            @foreach (['7' => '7 Hari', '14' => '14 Hari', '30' => '30 Hari'] as $key => $value)
-                                <option value="{{ $key }}">{{ $value }}</option>
-                            @endforeach
-                        </x-t-select>
+                        <x-t-input t="number" id="biaya_operasional" name="biaya_operasional"
+                            label="Biaya Operasional" required />
                     </div>
-
-                    <!-- Status Pembayaran -->
+                </div>
+                <div class="row">
                     <div class="col-md-12 mt-3">
-                        <label class="form-label">Status Pembayaran</label>
-                        <div class="d-flex">
-                            <div class="form-check me-3">
-                                <input class="form-check-input" type="radio" name="status" value="Lunas"
-                                    required id="lunas">
-                                <label class="form-check-label" for="lunas">Lunas</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="status" value="Belum Lunas"
-                                    required id="belum_lunas">
-                                <label class="form-check-label" for="belum_lunas">Belum Lunas</label>
-                            </div>
-                        </div>
+                        <x-t-select id="metode_bayar" name="metode_bayar" label="Metode Pembayaran" required>
+                            <option value="" selected disabled>-- Pilih Metode Pembayaran --</option>
+                            <option value="Cash">Cash</option>
+                            <option value="Transfer">Transfer</option>
+                        </x-t-select>
                     </div>
                 </div>
             </div>
@@ -288,6 +274,10 @@
                                 timer: 1500
                             });
 
+                            if (response.success && response.data) {
+                                printReceipt(response.data);
+                            }
+
                             setTimeout(() => {
                                 location.reload();
                             }, 1500);
@@ -304,6 +294,96 @@
                     });
                 });
             });
+
+            function formatNumber(number) {
+                return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            }
+
+            function printReceipt(paymentData) {
+                paymentData.forEach(data => {
+                    const printWindow = window.open('', '', 'height=600,width=800');
+
+                    const html = `
+                        <!DOCTYPE html>
+                        <html>
+                        <head>
+                            <title>Struk Pembayaran</title>
+                            <style>
+                                .receipt-container {
+                                    width: 80mm;
+                                    padding: 10px;
+                                    font-family: Arial;
+                                }
+                                .receipt-header {
+                                    text-align: center;
+                                    margin-bottom: 15px;
+                                }
+                                .receipt-item {
+                                    margin: 5px 0;
+                                }
+                                .receipt-total {
+                                    font-weight: bold;
+                                    border-top: 1px dashed #000;
+                                    margin-top: 10px;
+                                    padding-top: 10px;
+                                }
+                                .order-details {
+                                    margin: 10px 0;
+                                    padding: 5px 0;
+                                    border-bottom: 1px dashed #000;
+                                }
+                            </style>
+                        </head>
+                        <body onload="window.print()">
+                            <div class="receipt-container">
+                                <div class="receipt-header">
+                                    <h2>STRUK PEMBAYARAN</h2>
+                                    <p>Sistem Jasa Angkutan</p>
+                                    <p>${data.tgl_bayar}</p>
+                                </div>
+                                
+                                <div class="receipt-item">
+                                    <p>No. Transaksi: ${data.payment_reference}</p>
+                                    <p>Customer: ${data.customer.nama}</p>
+                                    <p>Alamat: ${data.customer.alamat}</p>
+                                    <p>Metode Bayar: ${data.metode_bayar}</p>
+                                </div>
+
+                                <div class="receipt-item">
+                                    <h3>Detail Pesanan:</h3>
+                                    ${data.orders.map(order => `
+                                                                <div class="order-details">
+                                                                    <p>Jenis Kayu: ${order.jenis_kayu}</p>
+                                                                    <p>Volume: ${order.volume_m3} m³</p>
+                                                                    <p>Jenis Pengiriman: ${order.jenis_pengiriman}</p>
+                                                                    <p>Biaya: Rp ${Number(order.biaya).toLocaleString()}</p>
+                                                                </div>
+                                                            `).join('')}
+                                </div>
+
+                                <div class="receipt-total">
+                                    <p>Total Biaya: Rp ${Number(data.total_biaya).toLocaleString()}</p>
+                                    <p>Biaya Operasional: Rp ${Number(data.biaya_operasional).toLocaleString()}</p>
+                                    <h3>TOTAL: Rp ${Number(data.total_keseluruhan).toLocaleString()}</h3>
+                                </div>
+
+                                <div class="receipt-footer" style="text-align: center; margin-top: 20px;">
+                                    <p>Terima kasih telah menggunakan jasa kami</p>
+                                    <p>** Struk ini merupakan bukti pembayaran yang sah **</p>
+                                </div>
+                            </div>
+                        </body>
+                        </html>
+                    `;
+
+                    printWindow.document.write(html);
+                    printWindow.document.close();
+
+                    printWindow.onafterprint = function() {
+                        printWindow.close();
+                    };
+                });
+            }
 
             function editData(id) {
                 $.ajax({

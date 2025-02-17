@@ -185,54 +185,59 @@
                     b: 190
                 },
             ];
+            var dataPertokoan = @json($pertokoanChart);
+            var dataSimpanan = @json($simpananChart);
+            var dataPinjaman = @json($pinjamanChart);
+            var dataJasa = @json($jasaChart);
+
             // line chart Pertokoan
             $("#pertokoan").length && Morris.Line({
                 element: "pertokoan",
                 gridLineColor: "#20B799",
                 lineColors: ["#20B799"],
-                data: data,
+                data: dataPertokoan,
                 xkey: "y",
                 ykeys: ["b"],
                 hideHover: "auto",
                 resize: true,
                 labels: ["Total"]
-            })
+            });
             // line chart pinjaman
             $("#pinjaman").length && Morris.Line({
                 element: "pinjaman",
                 gridLineColor: "#EFB540",
                 lineColors: ["#EFB540"],
-                data: data,
+                data: dataPinjaman,
                 xkey: "y",
                 ykeys: ["b"],
                 hideHover: "auto",
-                resize: !0,
+                resize: true,
                 labels: ["Total"]
-            })
+            });
             // line chart Simpanan
             $("#simpanan").length && Morris.Line({
                 element: "simpanan",
                 gridLineColor: "#FA5944",
                 lineColors: ["#FA5944"],
-                data: data,
+                data: dataSimpanan,
                 xkey: "y",
                 ykeys: ["b"],
                 hideHover: "auto",
-                resize: !0,
+                resize: true,
                 labels: ["Total"]
-            })
+            });
             // line chart Jasa Angkutan
             $("#jasa").length && Morris.Line({
                 element: "jasa",
                 gridLineColor: "#3CBADE",
                 lineColors: ["#3CBADE"],
-                data: data,
+                data: dataJasa,
                 xkey: "y",
                 ykeys: ["b"],
                 hideHover: "auto",
-                resize: !0,
+                resize: true,
                 labels: ["Total"]
-            })
+            });
         </script>
     @endpush
 </x-app-layout>

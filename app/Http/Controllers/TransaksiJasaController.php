@@ -6,6 +6,7 @@ use App\Http\Requests\InvoiceRequest;
 use App\Http\Requests\StoreJasaRequest;
 use App\Models\Customer;
 use App\Models\Invoice;
+use App\Models\Payment;
 use App\Models\Provider;
 use App\Models\Wood;
 use App\Models\WoodShippingOrder;
@@ -19,16 +20,19 @@ class TransaksiJasaController extends Controller
         $customers = Customer::all();
         $providers = Provider::all();
         $orders = WoodShippingOrder::where('status', 'pending')->get();
+        if (session('code') == null || session('code') == '') {
+            session(['code' => 'JSA/' . date('Ymd') . '/' . rand(100, 999)]);
+        }
         return view('transaksi_jasa.index', compact('customers', 'providers', 'orders'));
     }
     public function store(StoreJasaRequest $request)
     {
         $validated = $request->validated();
 
-        DB::beginTransaction(); // Mulai transaksi database
+        DB::beginTransaction();
 
         try {
-            // Simpan data Wood terlebih dahulu
+            // Create Wood record
             $wood = Wood::create([
                 'jenis_kayu' => $validated['jenis_kayu'],
                 'volume_m3' => $validated['volume_m3'],
@@ -36,23 +40,22 @@ class TransaksiJasaController extends Controller
                 'panjang' => $validated['panjang'],
             ]);
 
-            // Hitung total biaya berdasarkan jenis pengiriman
+            // Get provider and service details
             $provider = Provider::findOrFail($validated['provider_id']);
-            $volume = $validated['volume_m3'];
-            $jenis_pengiriman = $validated['jenis_pengiriman'];
-            $harga_per_m3 = $provider->service->harga_per_m3;
-            $harga_per_angkutan = $provider->service->harga_per_angkutan;
-            $kapasitas_angkutan = $provider->service->volume_max;
+            $service = $provider->service;
 
-            if ($jenis_pengiriman == 'Per M3') {
-                $total_biaya = $volume * $harga_per_m3;
-            } else {
-                $jumlah_angkutan = ceil($volume / $kapasitas_angkutan);
-                $total_biaya = $jumlah_angkutan * $harga_per_angkutan;
-            }
+            // Calculate shipping cost
+            $shippingDetails = $this->calculate(
+                volume: $validated['volume_m3'],
+                shippingType: $validated['jenis_pengiriman'],
+                pricePerM3: $service->harga_per_m3,
+                pricePerShipment: $service->harga_per_angkutan,
+                maxCapacity: $service->volume_max
+            );
 
+            // Create shipping order
             WoodShippingOrder::create([
-                'code' => 'JSA/' . date('Ymd') . '/' . rand(100, 999),
+                'code' => session('code'),
                 'customer_id' => $validated['customer_id'],
                 'provider_id' => $validated['provider_id'],
                 'wood_id' => $wood->id,
@@ -60,11 +63,12 @@ class TransaksiJasaController extends Controller
                 'tgl_kirim' => $validated['tgl_kirim'],
                 'lokasi_pengambilan' => $validated['lokasi_pengambilan'],
                 'lokasi_pengantaran' => $validated['lokasi_pengantaran'],
-                'jenis_pengiriman' => $jenis_pengiriman,
-                'harga_per_m3' => $harga_per_m3,
-                'harga_per_angkutan' => $harga_per_angkutan,
-                'kapasitas_angkutan_m3' => $kapasitas_angkutan,
-                'total_biaya' => $total_biaya
+                'jenis_pengiriman' => $validated['jenis_pengiriman'],
+                'harga_per_m3' => $service->harga_per_m3,
+                'harga_per_angkutan' => $service->harga_per_angkutan,
+                'kapasitas_angkutan_m3' => $service->volume_max,
+                'total_biaya' => $shippingDetails['total_cost'],
+                'jumlah_angkutan' => $shippingDetails['number_of_shipments'] ?? null,
             ]);
 
 
@@ -142,35 +146,142 @@ class TransaksiJasaController extends Controller
             return response()->json(['success' => false, 'message' => 'Terjadi kesalahan: ' . $th->getMessage()]);
         }
     }
-    public function proses(InvoiceRequest $request)
+    public function proses(Request $request)
     {
-        $validated = $request->validated();
+        $validated = $request->validate([
+            'biaya_operasional' => 'required|numeric',
+            'metode_bayar' => 'required|in:Cash,Transfer',
+        ]);
+
+        $code = session('code');
+        if (empty($code)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Kode transaksi tidak ditemukan!'
+            ]);
+        }
+
         try {
-            DB::beginTransaction(); // Mulai transaksi database
+            DB::beginTransaction();
 
-            $orders = WoodShippingOrder::where('status', 'pending')->get();
-            $totalHarga = $orders->sum('total_biaya');
+            // Ambil semua order pending dengan kode yang sama
+            $orders = WoodShippingOrder::with(['wood', 'customer'])
+                ->where('status', 'pending')
+                ->where('code', $code)
+                ->get();
 
-            // Hitung total harga berdasarkan jenis pengiriman
-            foreach ($orders as $key => $order) {
-                Invoice::create([
-                    'code' => $order->code,
-                    'no_faktur' => 'INV/' . date('Ymd') . '/' . $order->id,
-                    'tgl_faktur' => now(),
-                    'total_pembayaran' => $totalHarga,
-                    'tgl_jatuh_tempo' => $validated['status'] === 'Lunas' ? now() : now()->addDays($validated['tgl_jatuh_tempo']),
-                    'status' => $validated['status'],
+            if ($orders->isEmpty()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Tidak ada pesanan yang perlu dibayar!'
                 ]);
-                $order->update(['status' => 'Success']);
             }
 
-            DB::commit(); // Simpan transaksi
+            // Grouping orders berdasarkan customer
+            $groupedOrders = $orders->groupBy('customer_id');
 
-            return response()->json(['success' => true, 'message' => 'Transaksi berhasil diproses!']);
-        } catch (\Throwable $th) {
-            dd($th->getMessage());
+            $results = [];
+
+            foreach ($groupedOrders as $customerId => $customerOrders) {
+                $totalHarga = $customerOrders->sum('total_biaya');
+                $customer = $customerOrders->first()->customer;
+
+                // Buat payment untuk setiap customer
+                $payment = Payment::create([
+                    'code' => $code,
+                    'customer_id' => $customerId,
+                    'tgl_bayar' => now(),
+                    'jumlah_bayar' => $totalHarga,
+                    'biaya_operasional' => $validated['biaya_operasional'],
+                    'metode_bayar' => $validated['metode_bayar'],
+                    'payment_reference' => 'JSA/' . date('Ymd') . '/' . strtoupper(substr(uniqid(), -3)),
+                ]);
+
+                // Update status orders
+                $customerOrders->each(function ($order) use ($payment) {
+                    $order->update([
+                        'status' => 'success',
+                        'payment_id' => $payment->id
+                    ]);
+                });
+
+                // Siapkan data untuk struk
+                $orderDetails = $customerOrders->map(function ($order) {
+                    return [
+                        'jenis_kayu' => $order->wood->jenis_kayu,
+                        'volume_m3' => $order->wood->volume_m3,
+                        'jenis_pengiriman' => $order->jenis_pengiriman,
+                        'biaya' => $order->total_biaya,
+                    ];
+                });
+
+                $results[] = [
+                    'payment_reference' => $payment->code,
+                    'tgl_bayar' => $payment->tgl_bayar->format('d/m/Y H:i:s'),
+                    'metode_bayar' => $payment->metode_bayar,
+                    'customer' => [
+                        'nama' => $customer->nama,
+                        'alamat' => $customer->alamat,
+                    ],
+                    'orders' => $orderDetails,
+                    'total_biaya' => $totalHarga,
+                    'biaya_operasional' => $payment->biaya_operasional,
+                    'total_keseluruhan' => $totalHarga + $payment->biaya_operasional
+                ];
+            }
+
+            session()->forget('code');
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Pembayaran berhasil diproses!',
+                'data' => $results
+            ]);
+        } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['success' => false, 'message' => 'Terjadi kesalahan: ' . $th->getMessage()]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat memproses pembayaran: ' . $e->getMessage()
+            ]);
         }
+    }
+    public function calculate(
+        float $volume,
+        string $shippingType,
+        float $pricePerM3,
+        float $pricePerShipment,
+        float $maxCapacity
+    ): array {
+        if ($volume <= 0) {
+            throw new \InvalidArgumentException('Volume harus lebih besar dari 0');
+        }
+
+        if ($shippingType === 'Per M3') {
+            return [
+                'shipping_type' => 'Per M3',
+                'volume' => $volume,
+                'price_per_unit' => $pricePerM3,
+                'total_cost' => $volume * $pricePerM3,
+                'calculation_details' => "Volume {$volume} m³ × Rp {$pricePerM3}"
+            ];
+        }
+
+        if ($shippingType === 'Per Angkutan') {
+            $numberOfShipments = ceil($volume / $maxCapacity);
+            $totalCost = $numberOfShipments * $pricePerShipment;
+
+            return [
+                'shipping_type' => 'Per Angkutan',
+                'volume' => $volume,
+                'capacity_per_shipment' => $maxCapacity,
+                'number_of_shipments' => $numberOfShipments,
+                'price_per_shipment' => $pricePerShipment,
+                'total_cost' => $totalCost,
+                'calculation_details' => "Jumlah angkutan: {$numberOfShipments} × Rp {$pricePerShipment}"
+            ];
+        }
+
+        throw new \InvalidArgumentException('Jenis pengiriman tidak valid');
     }
 }

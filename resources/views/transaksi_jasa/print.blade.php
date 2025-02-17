@@ -1,95 +1,88 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap"
-        rel="stylesheet">
+    <title>Struk Pembayaran</title>
     <style>
-        /* Gaya untuk memusatkan teks di seluruh tabel */
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        .receipt-container {
+            width: 80mm;
+            padding: 10px;
+            font-family: 'Arial', sans-serif;
+            font-size: 12px;
         }
 
-        th,
-        td {
+        .receipt-header {
             text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .receipt-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+
+        .receipt-item {
+            margin: 5px 0;
+        }
+
+        .receipt-total {
+            margin-top: 10px;
+            padding-top: 5px;
+            border-top: 1px dashed #000;
+            font-weight: bold;
+        }
+
+        .receipt-footer {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 10px;
+        }
+
+        @media print {
+            @page {
+                margin: 0;
+                size: 80mm 200mm;
+            }
+
+            body {
+                margin: 0;
+            }
         }
     </style>
 </head>
 
 <body>
-    <p style="text-align: center">PRIMER KOPERASI KARYAWAN</p>
-    <hr class="hr">
-    <p style="text-align: center">{{ $product->user->name . ' / ' . $product->created_at . ' / ' . $product->type }}</p>
-    <hr class="hr">
-    <table>
-        @php
-            $total = 0;
-        @endphp
-        @foreach ($items as $item)
-            @php
-                $price = 0;
-                if ($product->type == 'Credit') {
-                    $price = $item->price + $item->shu * $item->quantity;
-                } else {
-                    $price = $item->price * $item->quantity;
-                }
-                $total += $price;
-            @endphp
-            <tr style="text-align: center">
-                <td>{{ $item->quantity }}</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>x</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>{{ $item->product->name }}</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>{{ number_format($product->type == 'Credit' ? $item->product->price_credit : $item->product->price) }}
-                </td>
-            </tr>
-        @endforeach
-    </table>
-    <hr class="hr">
-    <table>
-        <tr>
-            <td>Total</td>
-            <td>{{ number_format($total) }}</td>
-        </tr>
-        <tr>
-            <td>Bayar:</td>
-            <td>{{ number_format($product->amount_price) }}</td>
-        </tr>
-        <tr>
-            <td>Kembali:</td>
-            <td>
-                @php
-                    $kembali = 0;
-                    if ($product->amount_price > $product->amount) {
-                        $kembali = $product->amount_price - $product->amount;
-                    }
-                @endphp
-                {{ number_format($kembali) }}
-            </td>
-        </tr>
-    </table>
-    <p style="text-align: center">Termikasih, barang yang sudah dibeli tidak dapat dikembalikan.</p>
-    <script>
-        window.print();
-        setTimeout(() => {
-            window.close();
-        }, 1000);
-    </script>
+    <div class="receipt-container">
+        <div class="receipt-header">
+            <div class="receipt-title">STRUK PEMBAYARAN</div>
+            <div>{{ config('app.name') }}</div>
+            <div>{{ date('d/m/Y H:i:s') }}</div>
+        </div>
+
+        <div class="receipt-item">No. Transaksi: @{{ payment_reference }}</div>
+        <div class="receipt-item">Tanggal: @{{ tgl_bayar }}</div>
+        <div class="receipt-item">Metode Bayar: @{{ metode_bayar }}</div>
+
+        <div class="receipt-item">
+            <hr style="border-top: 1px dashed #000;">
+        </div>
+
+        <div class="receipt-item">Volume: @{{ volume_m3 }} m³</div>
+        <div class="receipt-item">Jenis Pengiriman: @{{ jenis_pengiriman }}</div>
+        <div class="receipt-item">Biaya Pengiriman: Rp @{{ formatNumber(total_biaya) }}</div>
+        <div class="receipt-item">Biaya Operasional: Rp @{{ formatNumber(biaya_operasional) }}</div>
+
+        <div class="receipt-total">
+            TOTAL: Rp @{{ formatNumber(total_biaya + biaya_operasional) }}
+        </div>
+
+        <div class="receipt-footer">
+            Terima kasih telah menggunakan jasa kami
+            <br>
+            ** Struk ini merupakan bukti pembayaran yang sah **
+        </div>
+    </div>
 </body>
 
 </html>

@@ -19,7 +19,7 @@
             <th>Pelanggan</th>
             <th>BKPH</th>
             <th>Provider</th>
-            <th>Total Pembayaran</th>
+            <th>Total Dibayar</th>
             <th>Status</th>
         </tr>
     </thead>

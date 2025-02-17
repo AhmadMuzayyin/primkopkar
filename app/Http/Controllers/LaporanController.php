@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Invoice;
 use App\Models\Loan;
 use App\Models\Member;
+use App\Models\Payment;
 use App\Models\Product;
 use App\Models\ProductTransaction;
 use App\Models\Restocking;
@@ -143,9 +144,9 @@ class LaporanController extends Controller
     public function jasa(Request $request)
     {
         if ($request->ajax()) {
-            $query = Invoice::with(['woodShippingOrder.wood', 'woodShippingOrder.customer', 'woodShippingOrder.provider'])
+            $query = Payment::with(['woodShippingOrder.wood', 'woodShippingOrder.customer', 'woodShippingOrder.provider'])
                 ->when($request->from && $request->to, function ($q) use ($request) {
-                    return $q->whereBetween('tgl_faktur', [$request->from, $request->to]);
+                    return $q->whereBetween('tgl_bayar', [$request->from, $request->to]);
                 });
 
             return DataTables::of($query)
@@ -160,10 +161,10 @@ class LaporanController extends Controller
                     return $row->woodShippingOrder->provider->nama ?? '-';
                 })
                 ->addColumn('total', function ($row) {
-                    return $row->total_pembayaran;
+                    return $row->jumlah_bayar + $row->biaya_operasional;
                 })
                 ->addColumn('status', function ($row) {
-                    return $row->status;
+                    return $row->woodShippingOrder->status ?? '-';
                 })
                 ->rawColumns(['pelanggan', 'bkph', 'provider', 'total', 'status'])
                 ->make(true);

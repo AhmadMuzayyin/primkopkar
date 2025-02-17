@@ -15,9 +15,10 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Invoice::class)->constrained()->cascadeOnDelete();
+            $table->string('code')->unique();
             $table->date('tgl_bayar');
-            $table->integer('jumlah_bayar');
+            $table->double('jumlah_bayar');
+            $table->double('biaya_operasional');
             $table->enum('metode_bayar', [MetodeBayar::cash->value, MetodeBayar::transfer->value]);
             $table->timestamps();
         });
