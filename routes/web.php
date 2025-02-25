@@ -86,6 +86,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::patch('jasa/{id}/update', 'update')->name('update');
         Route::delete('jasa/{id}/destroy', 'destroy')->name('destroy');
         Route::post('jasa/proses', 'proses')->name('proses');
+        Route::post('/set-customer', 'setCustomer')->name('set-customer');
+        Route::post('/reset-customer', 'resetCustomer')->name('reset-customer');
     });
     Route::controller(LaporanController::class)->as('laporan.')->group(function () {
         Route::get('laporan', 'index')->name('index');
