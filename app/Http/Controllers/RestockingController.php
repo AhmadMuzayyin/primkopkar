@@ -4,16 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Repositories\Product\ProductRepository;
 use App\Repositories\Restocking\RestockingRepository;
+use App\Repositories\Stock\StockRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class RestockingController extends Controller
 {
-    protected $restocking, $products;
-    public function __construct(RestockingRepository $restocking, ProductRepository $products)
+    protected $restocking, $products, $stock;
+    public function __construct(RestockingRepository $restocking, ProductRepository $products, StockRepository $stock)
     {
         $this->restocking = $restocking;
         $this->products = $products;
+        $this->stock = $stock;
     }
     public function index()
     {
@@ -42,6 +44,10 @@ class RestockingController extends Controller
                 'stock' => $validate['stock'] + $product->stock,
                 'purchase_price' => $validate['purchase_price'],
             ];
+            $stockData = [
+                'stock' => $validate['stock'] + $product->stock,
+            ];
+            $this->stock->updateData($stockData, $validate['product_id']);
             $this->products->updateData($productData, $validate['product_id']);
             DB::commit();
             return redirect()->route('restocking.index')->with('success', 'Kulakan berhasil dibuat.');
@@ -76,6 +82,10 @@ class RestockingController extends Controller
                 'stock' => $validate['stock'] + $stock,
                 'purchase_price' => $validate['purchase_price'],
             ];
+            $stockData = [
+                'stock' => $validate['stock'] + $product->stock,
+            ];
+            $this->stock->updateData($stockData, $validate['product_id']);
             $restocking->update($validate);
             $product->update($productData);
             DB::commit();
