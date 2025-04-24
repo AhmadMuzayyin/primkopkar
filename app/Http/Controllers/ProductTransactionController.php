@@ -177,7 +177,6 @@ class ProductTransactionController extends Controller
             'paymentMethod' => 'required:in,Cash,Credit',
             'price' => 'required_if:paymentMethod,Cash|numeric',
         ]);
-        // dd($request->all());
         try {
             if ($request->paymentMethod == 'Credit') {
                 $request->validate([

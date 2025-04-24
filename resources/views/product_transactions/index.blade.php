@@ -413,6 +413,8 @@
                     $('#btnPrintStruk').on('click', function() {
                         var member_id = $('#member_id').val();
                         var price = $('#price').val();
+                        // convert to number
+                        price = price.replace(/\D/g, '');
                         var paymentMethod = $('input[name="paymentMethod"]:checked').val();
                         var _token = "{{ csrf_token() }}";
 

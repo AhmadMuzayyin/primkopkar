@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Helpers\Toastr;
 use App\Http\Requests\ProductRequest;
 use App\Models\Product;
+use App\Models\ProductItemTransaction;
+use App\Models\ProductTransaction;
 use App\Repositories\Product\ProductRepository;
 use App\Repositories\Stock\StockRepository;
 use Illuminate\Http\Request;
@@ -91,8 +93,9 @@ class ProductController extends Controller
     public function destroy($products)
     {
         try {
+            $productItem = ProductItemTransaction::where('product_id', $products)->first();
+            ProductTransaction::where('id', $productItem->product_transaction_id)->delete();
             $this->products->deleteData($products);
-
             return response()->json([
                 'status' => 'success',
                 'message' => 'Berhasil menghapus data',

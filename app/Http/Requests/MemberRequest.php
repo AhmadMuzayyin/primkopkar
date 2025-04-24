@@ -23,7 +23,13 @@ class MemberRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255', 'regex:/^[A-Za-z\s]+$/'],
-            'phone' => ['required', 'string', 'max:15', 'regex:/^[0-9]+$/'],
+            'phone' => [
+                'required',
+                'string',
+                'max:15',
+                'regex:/^[0-9]+$/',
+                'unique:members,phone,' . $this->route('members') . ',id'
+            ],
             'address' => ['required', 'string', 'max:255'],
         ];
     }
